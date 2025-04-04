@@ -1,6 +1,7 @@
+
 # 用户中心前端
 
-This project is initialized with [鱼皮用户中心](https://pro.ant.design). Follow is the quick guide for how to use.
+This project is initialized with [用户中心](https://pro.ant.design). Follow is the quick guide for how to use.
 
 ## Environment Prepare
 
@@ -18,7 +19,7 @@ yarn
 
 ## Provided Scripts
 
-鱼皮用户中心 provides some useful script to help you quick start and build with web project, code style check and test.
+用户中心 provides some useful script to help you quick start and build with web project, code style check and test.
 
 Scripts provided in `package.json`. It's safe to modify or add additional script:
 
@@ -55,3 +56,4 @@ npm test
 ## More
 
 You can view full document on our [official website](https://pro.ant.design). And welcome any feedback in our [github](https://github.com/ant-design/ant-design-pro).
+
