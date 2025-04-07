@@ -16,7 +16,7 @@ const Welcome: React.FC = () => {
     <PageContainer>
       <Card>
         <Alert
-          message={'更快更强的重型组件，已经发布。'}
+          message={'UNSWit 用户中心v1'}
           type="success"
           showIcon
           banner
@@ -32,7 +32,7 @@ const Welcome: React.FC = () => {
             rel="noopener noreferrer"
             target="__blank"
           >
-            欢迎使用
+            这个链接导航去anyt-design的技术文档table
           </a>
         </Typography.Text>
         <CodePreview>yarn add @ant-design/pro-table</CodePreview>
@@ -48,7 +48,7 @@ const Welcome: React.FC = () => {
             rel="noopener noreferrer"
             target="__blank"
           >
-            欢迎使用
+            这个链接导航去anyt-design的技术文档layout
           </a>
         </Typography.Text>
         <CodePreview>yarn add @ant-design/pro-layout</CodePreview>

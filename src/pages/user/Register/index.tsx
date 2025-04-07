@@ -36,9 +36,15 @@ const Register: React.FC = () => {
         });
         return;
       }
-    } catch (error: any) {
-      const defaultLoginFailureMessage = '注册失败，请重试！';
-      message.error(defaultLoginFailureMessage);
+    // } catch (error: any) {
+    //   const defaultLoginFailureMessage = '注册失败，请重试！';
+    //   message.error(defaultLoginFailureMessage);
+    // }
+     } catch (error: any) {
+      // 尝试获取后端返回的 message 和 description
+      const msg = error?.data?.message || '注册失败';
+      const desc = error?.data?.description;
+      message.error(`${msg}${desc ? ': ' + desc : ''}`);
     }
   };
 
@@ -52,8 +58,8 @@ const Register: React.FC = () => {
             }
           }}
           logo={<img alt="logo" src={SYSTEM_LOGO}/>}
-          title="编程导航知识星球"
-          subTitle={<a href={PLANET_LINK} target="_blank" rel="noreferrer">最好的编程学习知识圈子</a>}
+          title="UNSWIT学习社区"
+          subTitle={<a href={PLANET_LINK} target="_blank" rel="noreferrer">unsw it专业知识学习圈子</a>}
           initialValues={{
             autoLogin: true,
           }}
@@ -115,20 +121,6 @@ const Register: React.FC = () => {
                     min: 8,
                     type: 'string',
                     message: '长度不能小于 8',
-                  },
-                ]}
-              />
-              <ProFormText
-                name="planetCode"
-                fieldProps={{
-                  size: 'large',
-                  prefix: <UserOutlined className={styles.prefixIcon}/>,
-                }}
-                placeholder="请输入星球编号"
-                rules={[
-                  {
-                    required: true,
-                    message: '星球编号是必填项！',
                   },
                 ]}
               />
