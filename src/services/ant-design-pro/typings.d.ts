@@ -73,10 +73,10 @@ declare namespace API {
   };
 
   type RegisterParams = {
+    userName?: string;
     userAccount?: string;
     userPassword?: string;
     checkPassword?: string;
-    planetCode?: string;
     type?: string;
   };
 

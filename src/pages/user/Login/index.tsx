@@ -113,9 +113,9 @@ const Login: React.FC = () => {
                     message: '密码是必填项！',
                   },
                   {
-                    min: 8,
+                    min: 6,
                     type: 'string',
-                    message: '长度不能小于 8',
+                    message: '长度不能小于 6',
                   },
                 ]}
               />

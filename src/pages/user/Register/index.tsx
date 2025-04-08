@@ -36,10 +36,6 @@ const Register: React.FC = () => {
         });
         return;
       }
-    // } catch (error: any) {
-    //   const defaultLoginFailureMessage = '注册失败，请重试！';
-    //   message.error(defaultLoginFailureMessage);
-    // }
      } catch (error: any) {
       // 尝试获取后端返回的 message 和 description
       const msg = error?.data?.message || '注册失败';
@@ -63,6 +59,7 @@ const Register: React.FC = () => {
           initialValues={{
             autoLogin: true,
           }}
+          // 这个是表单提交的回调函数（form必带）
           onFinish={async (values) => {
             await handleSubmit(values as API.RegisterParams);
           }}
@@ -73,12 +70,20 @@ const Register: React.FC = () => {
           {type === 'account' && (
             <>
               <ProFormText
+                name="userName"
+                fieldProps={{
+                  size: 'large',
+                  prefix: <UserOutlined className={styles.prefixIcon}/>,
+                }}
+                placeholder="起个狂拽帅气的名字吧"
+              />
+              <ProFormText
                 name="userAccount"
                 fieldProps={{
                   size: 'large',
                   prefix: <UserOutlined className={styles.prefixIcon}/>,
                 }}
-                placeholder="请输入账号"
+                placeholder="请输入账号（用于登录）"
                 rules={[
                   {
                     required: true,
@@ -99,9 +104,9 @@ const Register: React.FC = () => {
                     message: '密码是必填项！',
                   },
                   {
-                    min: 8,
+                    min: 6,
                     type: 'string',
-                    message: '长度不能小于 8',
+                    message: '长度不能小于 6',
                   },
                 ]}
               />
@@ -118,9 +123,9 @@ const Register: React.FC = () => {
                     message: '确认密码是必填项！',
                   },
                   {
-                    min: 8,
+                    min: 6,
                     type: 'string',
-                    message: '长度不能小于 8',
+                    message: '长度不能小于 6',
                   },
                 ]}
               />
