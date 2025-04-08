@@ -12,7 +12,14 @@
       {component: './404'},
     ],
   },
-  {path: '/welcome', name: '欢迎', icon: 'smile', component: './Welcome'},
+
+  {
+    path: '/welcome', 
+    name: '欢迎', 
+    icon: 'smile', 
+    component: './Welcome'
+  },
+
   {
     path: '/admin',
     name: '管理页',
@@ -24,7 +31,17 @@
       {component: './404'},
     ],
   },
-  {name: '查询表格', icon: 'table', path: '/list', component: './TableList'},
-  {path: '/', redirect: '/welcome'},
+
+  {
+    name: '查询表格', 
+    icon: 'table', 
+    path: '/list', 
+    component: './TableList'
+  },
+
+  { path: '/', 
+    redirect: '/welcome'
+  },
+  
   {component: './404'},
 ];

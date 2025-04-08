@@ -12,7 +12,6 @@ declare namespace API {
     email: string;
     userStatus: number;
     userRole: number;
-    planetCode: string;
     createTime: Date;
   };
 

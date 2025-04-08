@@ -72,6 +72,7 @@ const columns: ProColumns<API.CurrentUser>[] = [
     title: '操作',
     valueType: 'option',
     render: (text, record, _, action) => [
+      
       <a
         key="editable"
         onClick={() => {
@@ -80,9 +81,11 @@ const columns: ProColumns<API.CurrentUser>[] = [
       >
         编辑
       </a>,
-      <a href={record.url} target="_blank" rel="noopener noreferrer" key="view">
-        查看
-      </a>,
+      // 通过id跳转到详情页，而不是record.url
+      // <Link to={`/rule/details/${record.id}`} key="view">
+      // <a href={record.url} target="_blank" rel="noopener noreferrer" key="view">
+      //   查看
+      // </a>,
       <TableDropdown
         key="actionGroup"
         onSelect={() => action?.reload()}
@@ -104,9 +107,10 @@ export default () => {
       cardBordered
       request={async (params = {}, sort, filter) => {
         console.log(sort, filter);
-        const userList = await searchUsers();
+        const userList: API.BaseResponse<API.CurrentUser[]> = await searchUsers();
         return {
-          data: userList
+          data: userList,
+          success: true,
         }
       }}
       editable={{
@@ -136,7 +140,7 @@ export default () => {
         pageSize: 5,
       }}
       dateFormatter="string"
-      headerTitle="高级表格"
-    />
+      headerTitle="用户列表"
+    /> 
   );
 };

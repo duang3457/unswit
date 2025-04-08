@@ -32,7 +32,7 @@ const Welcome: React.FC = () => {
             rel="noopener noreferrer"
             target="__blank"
           >
-            这个链接导航去anyt-design的技术文档table
+            这个链接导航去ant-design的技术文档table
           </a>
         </Typography.Text>
         <CodePreview>yarn add @ant-design/pro-table</CodePreview>
@@ -48,7 +48,7 @@ const Welcome: React.FC = () => {
             rel="noopener noreferrer"
             target="__blank"
           >
-            这个链接导航去anyt-design的技术文档layout
+            这个链接导航去ant-design的技术文档layout
           </a>
         </Typography.Text>
         <CodePreview>yarn add @ant-design/pro-layout</CodePreview>
