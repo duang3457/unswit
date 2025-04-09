@@ -12,7 +12,7 @@ const columns: ProColumns<API.CurrentUser>[] = [
   },
   {
     title: '用户名',
-    dataIndex: 'username',
+    dataIndex: 'userName',
     copyable: true,
   },
   {
