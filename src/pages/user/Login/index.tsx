@@ -42,9 +42,14 @@ const Login: React.FC = () => {
     try {
       // 登录
       const user = await login({...values, type});
-      console.log(user.data);
+      
+      console.log('user', user);
+      console.log('user_status', user.status);
+      console.log('user_type', user.type);
+      console.log('user_currentAuthority', user.currentAuthority);
 
-      if (user.data) {
+
+      if (user) {
         const defaultLoginSuccessMessage = '登录成功！';
         message.success(defaultLoginSuccessMessage);
         await fetchUserInfo();

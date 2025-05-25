@@ -17,7 +17,7 @@ const request = extend({
 });
 
 /**
- * 所以请求拦截器
+ * 所有请求拦截器
  */
 request.interceptors.request.use((url, options): any => {
   console.log(`do request url = ${url}`)
