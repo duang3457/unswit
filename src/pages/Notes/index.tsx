@@ -18,6 +18,28 @@ import {
 //   </pre>
 // );
 
+// api{
+//     {
+        //    title="6713全套笔记" 
+        //     tooltip="这是6713的笔记合集，包含了6713笔记和外部资源" 
+        //     links={[
+        //       { label: '[导航链接] 6713在线笔记-Yang', href: 'https://sudden-comic-c00.notion.site/1f1f45253452809daeaad72fceb2146f?v=1f1f45253452806fb07b000ce212e8c5&pvs=4' },
+        //       { label: '6713笔记-XXX', href: 'https://sudden-comic-c00.notion.site/1f1f45253452809daeaad72fceb2146f?v=1f1f45253452806fb07b000ce212e8c5&pvs=4' },
+        //     ]}
+        //     id="6713" 
+//     };
+//     {
+    //    title="6713全套笔记" 
+            //     tooltip="这是6713的笔记合集，包含了6713笔记和外部资源" 
+            //     links={[
+            //       { label: '[导航链接] 6713在线笔记-Yang', href: 'https://sudden-comic-c00.notion.site/1f1f45253452809daeaad72fceb2146f?v=1f1f45253452806fb07b000ce212e8c5&pvs=4' },
+            //       { label: '6713笔记-XXX', href: 'https://sudden-comic-c00.notion.site/1f1f45253452809daeaad72fceb2146f?v=1f1f45253452806fb07b000ce212e8c5&pvs=4' },
+            //     ]}
+            //     id="6713" 
+//     };
+
+// }
+
 const Welcome: React.FC = () => {
   const { initialState } = useModel('@@initialState');
   const userName = initialState?.currentUser?.userName;

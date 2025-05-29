@@ -2,6 +2,7 @@
 /* eslint-disable */
 
 declare namespace API {
+  // 后端变化之后，最好同步一下这个，虽然不更新也没事
   type CurrentUser = {
     id: number;
     userName: string;

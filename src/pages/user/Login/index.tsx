@@ -28,26 +28,28 @@ const Login: React.FC = () => {
   const { initialState, setInitialState } = useModel('@@initialState');
 
   const fetchUserInfo = async () => {
+    // 这里只是拿到数据，并没有更新到globalState中
     const userInfo = await initialState?.fetchUserInfo?.();
 
     if (userInfo) {
       console.log(userInfo);
+      // 需要在登录成功后，调用setInitialState来更新globalState
+      // 这样就可以得到initialState.currentUser,不然还是老的值
       await setInitialState((s) => ({ ...s, currentUser: userInfo }));
     }
   };
 
   const handleSubmit = async (values: API.LoginParams) => {
     try {
-
+      // 有全局响应拦截器（位于plugins/globalRequest.ts），所以不需要在这里处理错误
+      // 成功返回：API.BaseResponse.data(即user = API.CurrentUser)，隐藏掉了code,message,description部分
       const user = await login({...values, type});
-      console.log('user', user);
-      console.log('user_status', user.status);
-      console.log('user_type', user.type);
-      console.log('user_currentAuthority', user.currentAuthority);
 
       if (user) {
         const defaultLoginSuccessMessage = '登录成功！';
         message.success(defaultLoginSuccessMessage);
+        // 这里需要同步操作，set完初始状态后，才能跳转
+        // 否则会报错：Cannot read properties of undefined (reading 'location')
         await fetchUserInfo();
         /** 此方法会跳转到 redirect 参数所在的位置 */
 
@@ -56,6 +58,7 @@ const Login: React.FC = () => {
         const {redirect} = query as {
           redirect: string;
         };
+        // 将当前页面的地址更改为 redirect 参数指定的路径（如果没有，则跳转到主页 '/'）。
         history.push(redirect || '/');
         return;
       }

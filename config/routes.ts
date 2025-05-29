@@ -15,7 +15,7 @@
 
   {
     path: '/welcome', 
-    name: '欢迎', 
+    name: 'unswit课程笔记', 
     icon: 'smile', 
     component: './Welcome'
   },
@@ -32,12 +32,12 @@
     ],
   },
 
-  {
-    name: '查询表格', 
-    icon: 'table', 
-    path: '/list', 
-    component: './TableList'
-  },
+  // {
+  //   name: '查询表格', 
+  //   icon: 'table', 
+  //   path: '/list', 
+  //   component: './TableList'
+  // },
 
   { path: '/', 
     redirect: '/welcome'
