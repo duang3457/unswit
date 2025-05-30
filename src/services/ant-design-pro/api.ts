@@ -112,3 +112,14 @@ export async function removeRule(options?: { [key: string]: any }) {
     ...(options || {}),
   });
 }
+
+/** 获取当前的笔记 GET /api/notes */
+export async function currentNotes(options?: { [key: string]: any }) {
+  return request<API.Course[]>(
+    '/api/course', 
+    {
+      method: 'GET',
+      ...(options || {}),
+  });
+}
+

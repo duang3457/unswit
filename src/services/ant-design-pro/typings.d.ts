@@ -3,6 +3,30 @@
 
 declare namespace API {
   // 后端变化之后，最好同步一下这个，虽然不更新也没事
+  type Course = {
+    courseId: number;
+    code: string; // 课程代码
+    title: string; // 课程标题
+    category: number; // 课程分类
+    toolTip?: string; // 课程描述
+    enrollTime?: number; // 课程可以注册的时间
+    noteList?: Note[]; // 课程笔记列表
+  }
+
+  type Note = {
+    id: number;
+    courseId: number; // 课程ID
+    title?: string;
+    link?: string;
+    author?: string; // 作者
+    lecturer?: string; // 讲师
+    toolTip?: string; // 笔记描述
+    // views?: number; // 浏览量
+    // likes?: number; // 点赞数
+    // comments?: number; // 评论数
+  };
+
+
   type CurrentUser = {
     id: number;
     userName: string;

@@ -2,66 +2,68 @@ import { ProFormGroup, ProFormSwitch, ProCard } from '@ant-design/pro-components
 import React, { useEffect, useState } from 'react';
 
 interface NoteCardProps {
-  title: string;
-  tooltip?: string;
-  links: { label: string; href: string }[];
-  id: string; // 用于存储置顶状态的唯一标识
+  courseId?: number; // 可选的课程ID
+  courseCode?: string; // 可选的课程代码
+  courseTitle?: string; // 可选的课程标题
+  courseTooltip?: string; // 可选的课程描述
+  notes?: API.Note[]; // 可选的笔记数据
 }
 
-const NoteCard: React.FC<NoteCardProps> = ({ title, tooltip, links, id}) => {
-  const storageKey = `card_pinned_${id}`;
-  const [pinned, setPinned] = useState<boolean>(() => {
-    const saved = localStorage.getItem(storageKey);
-    return saved === 'true'; // 默认 false
-  });
-
-  useEffect(() => {
-    localStorage.setItem(storageKey, String(pinned));
-  }, [pinned]);
+const CourseCard: React.FC<NoteCardProps> = ({ courseId, courseTitle, courseCode, courseTooltip, notes}) => {
+  const storageKey = `card_pinned_${courseId}`;
+    const [pinned, setPinned] = useState<boolean>(() => {
+      const saved = localStorage.getItem(storageKey);
+      return saved === 'true';
+    });
+  
+    useEffect(() => {
+      localStorage.setItem(storageKey, String(pinned));
+    }, [pinned]);
 
   return (
     <ProCard
-      title={title}
-      tooltip={tooltip}
+      title={courseTitle}
+      tooltip={courseTooltip}
       defaultCollapsed
       collapsible
-      gutter={[0, 6]}
-      colSpan={{ xs: 24, sm: 12, md: 12, lg: 12, xl: 12 }}
-      extra={
-        <ProFormGroup>
-          <ProFormSwitch
-            name="Visible"
-            noStyle
-            checkedChildren={'标记'}
-            unCheckedChildren={'未标'}
-            fieldProps={{
-              checked: pinned,
-              onChange: (checked) => setPinned(checked),
-            }}
-          />
-        </ProFormGroup>
-      }
       boxShadow
       bordered
       hoverable
+      gutter={[0, 4]}
       layout="center"
       direction="column"
-      
+      extra={
+          <ProFormGroup>
+            <ProFormSwitch
+              name="Visible"
+              noStyle
+              checkedChildren={'标记'}
+              unCheckedChildren={'未标'}
+              fieldProps={{
+                checked: pinned,
+                onChange: (checked) => setPinned(checked),
+              }}
+            />
+          </ProFormGroup>
+        }
     >
-      {links.map((item, index) => (
+      {notes?.map((note) => (
         <ProCard 
-          key={index} 
+          layout="center"
+          key={note?.id}
           hoverable 
-          onClick={() => window.open(item.href, '_blank')}
+          onClick={() => window.open(note?.link, '_blank')}
           style={{ cursor: 'pointer' }}
           >
-          <a href={item.href} target="__blank" rel="noopener noreferrer">
-            {item.label}
+          <a>
+            {note?.title}
           </a>
         </ProCard>
       ))}
+      
     </ProCard>
+
   );
 };
 
-export default NoteCard;
+export default CourseCard;
