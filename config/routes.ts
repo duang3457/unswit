@@ -31,7 +31,18 @@
     path: '/forum',
     name: '论坛',
     icon: 'comment',
-    component: './Forum'
+    routes: [
+    {
+      path: '/forum',
+      component: './Forum',
+    },
+    {
+      path: '/forum/:id',
+      component: './Forum/PostDetail',
+      name: '帖子详情',
+      hideInMenu: true,
+    },
+  ],
   },
 
   {
