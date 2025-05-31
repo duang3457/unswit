@@ -15,9 +15,23 @@
 
   {
     path: '/welcome', 
-    name: 'unswit课程笔记', 
+    name: '欢迎页', 
     icon: 'smile', 
     component: './Welcome'
+  },
+
+  {
+    path: '/notes',
+    name: 'unswit课程笔记',
+    icon: 'book',
+    component: './Notes'
+  },
+
+  {
+    path: '/forum',
+    name: '论坛',
+    icon: 'comment',
+    component: './Forum'
   },
 
   {

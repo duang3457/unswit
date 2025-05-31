@@ -1,54 +1,41 @@
-import React from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Card, Alert, Typography } from 'antd';
+import { Card, Alert, Typography, message } from 'antd';
 //import styles from './Welcome.less';
-import NoteCard from '@/components/NoteCard';
+import CourseCard from '@/components/NoteCard';
 import { useModel } from 'umi';
-import {
-  ProCard,
-  ProFormGroup,
-  ProFormSwitch,
-} from '@ant-design/pro-components';
+import { ProCard } from '@ant-design/pro-components';
+import AddNote from './components/addNote';
 
-// const CodePreview: React.FC = ({ children }) => (
-//   <pre className={styles.pre}>
-//     <code>
-//       <Typography.Text copyable>{children}</Typography.Text>
-//     </code>
-//   </pre>
-// );
+import React, { useEffect, useState } from 'react';
+import { currentNotes } from '@/services/ant-design-pro/api';
 
-// api{
-//     {
-        //    title="6713全套笔记" 
-        //     tooltip="这是6713的笔记合集，包含了6713笔记和外部资源" 
-        //     links={[
-        //       { label: '[导航链接] 6713在线笔记-Yang', href: 'https://sudden-comic-c00.notion.site/1f1f45253452809daeaad72fceb2146f?v=1f1f45253452806fb07b000ce212e8c5&pvs=4' },
-        //       { label: '6713笔记-XXX', href: 'https://sudden-comic-c00.notion.site/1f1f45253452809daeaad72fceb2146f?v=1f1f45253452806fb07b000ce212e8c5&pvs=4' },
-        //     ]}
-        //     id="6713" 
-//     };
-//     {
-    //    title="6713全套笔记" 
-            //     tooltip="这是6713的笔记合集，包含了6713笔记和外部资源" 
-            //     links={[
-            //       { label: '[导航链接] 6713在线笔记-Yang', href: 'https://sudden-comic-c00.notion.site/1f1f45253452809daeaad72fceb2146f?v=1f1f45253452806fb07b000ce212e8c5&pvs=4' },
-            //       { label: '6713笔记-XXX', href: 'https://sudden-comic-c00.notion.site/1f1f45253452809daeaad72fceb2146f?v=1f1f45253452806fb07b000ce212e8c5&pvs=4' },
-            //     ]}
-            //     id="6713" 
-//     };
-
-// }
-
-const Welcome: React.FC = () => {
+const Notes: React.FC = () => {
   const { initialState } = useModel('@@initialState');
+  const [courses, setCourses] = useState<API.Course[]>([]);
   const userName = initialState?.currentUser?.userName;
+
+  useEffect(() => {
+    currentNotes()
+      .then((res) => {
+        if (res) {
+          setCourses(res);
+          console.log('获取到的笔记数据：', res);
+        } else {
+          message.error("notes接口返回数据为空");
+          console.error('接口返回错误：', );
+        }
+      })
+      .catch((err) => {
+        message.error("获取笔记数据失败");
+        console.error('调用失败：', err);
+      });
+  }, []);
 
   return (
     <PageContainer>
       <Card>
         <Alert
-          message={`UNSWit 学习社区欢迎你，${userName || '同学'}！`}
+          message={`这里是课程笔记栏，${userName+'同学' || '同学'}!`}
           type="success" // success,info,warning,error
           showIcon
           banner
@@ -58,54 +45,38 @@ const Welcome: React.FC = () => {
           }}
         />
         <Typography.Text strong>
-          <ProCard gutter={[8,8]} title="AI课" wrap bordered tooltip="AI课包含AI-stream系列课程，包括9444,9417,9517,6713,9414等">
-          <NoteCard 
-            title="6713全套笔记" 
-            tooltip="这是6713的笔记合集，包含了6713笔记和外部资源" 
-            links={[
-              { label: '[导航链接] 6713在线笔记-Yang', href: 'https://sudden-comic-c00.notion.site/1f1f45253452809daeaad72fceb2146f?v=1f1f45253452806fb07b000ce212e8c5&pvs=4' },
-              { label: '6713笔记-XXX', href: 'https://sudden-comic-c00.notion.site/1f1f45253452809daeaad72fceb2146f?v=1f1f45253452806fb07b000ce212e8c5&pvs=4' },
-            ]}
-            id="6713"
-      
+          <ProCard 
+            gutter={[16,16]} 
+            title="AI" 
+            bordered 
+            wrap 
+            extra={<AddNote />}
+            tooltip="AI课包含AI-stream系列课程，包括9444,9417,9517,6713,9414等" 
+            subTitle="AI课程" 
             >
-          </NoteCard>
-          
-          <NoteCard
-            title="9417全套笔记"
-            tooltip="这是9417的笔记合集，包含了9417笔记和外部资源"
-            links={[
-              { label: '[导航链接] 9417在线笔记-Yang', href: "https://sudden-comic-c00.notion.site/1e8f45253452805d97d3ddf1e01f3e6b?v=1e8f4525345280268519000c45442a68&pvs=4" },
-              { label: '9417笔记-XXX', href: 'https://sudden-comic-c00.notion.site/1e8f45253452805d97d3ddf1e01f3e6b?v=1e8f4525345280268519000c45442a68&pvs=4' },
-            ]}
-            id="9444"
-          
-            >
-          </NoteCard>
+          {courses.map((course) => (
+            <ProCard colSpan={{xs: 24, sm: 24, md: 12, lg: 12}} bodyStyle={{ padding: 0 }}>
+            <CourseCard 
+              courseId={course.courseId}
+              courseCode={course.code} 
+              courseTitle={course.title} 
+              courseTooltip={course.toolTip} 
+              notes = {course.noteList || []}
+              >
+            </CourseCard>
+            </ProCard>
 
-          <NoteCard
-            title="9101全套笔记"
-            tooltip="这是9101的笔记合集，包含了9101笔记和外部资源"
-            links={[
-              { label: '[导航链接] 9101在线笔记-Yang', href: "https://sudden-comic-c00.notion.site/1e8f45253452805d97d3ddf1e01f3e6b?v=1e8f4525345280268519000c45442a68&pvs=4" },
-              { label: '9101笔记-XXX', href: 'https://sudden-comic-c00.notion.site/1e8f45253452805d97d3ddf1e01f3e6b?v=1e8f4525345280268519000c45442a68&pvs=4' },
-            ]}
-            id="9101"
-    
-            >
-          </NoteCard>
-
+          ))}
           </ProCard>
         </Typography.Text>
         <br />
-        {/* <CodePreview>yarn add @ant-design/pro-table</CodePreview> */}
+ 
         <Typography.Text
           strong
           style={{
             marginBottom: 12,
           }}
         >
-          
         </Typography.Text>
      
       </Card>
@@ -113,4 +84,4 @@ const Welcome: React.FC = () => {
   );
 };
 
-export default Welcome;
+export default Notes;
