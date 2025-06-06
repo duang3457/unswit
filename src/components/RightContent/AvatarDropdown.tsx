@@ -41,6 +41,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
         loginOut();
         return;
       }
+      // 如果是其他的菜单项，直接跳转到对应的页面
       history.push(`/account/${key}`);
     },
     [setInitialState],

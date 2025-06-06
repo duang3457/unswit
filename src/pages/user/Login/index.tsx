@@ -43,9 +43,9 @@ const Login: React.FC = () => {
     try {
       // 有全局响应拦截器（位于plugins/globalRequest.ts），所以不需要在这里处理错误
       // 成功返回：API.BaseResponse.data(即user = API.CurrentUser)，隐藏掉了code,message,description部分
-      const user = await login({...values, type});
+      const response = await login({...values, type});
 
-      if (user) {
+      if (response) {
         const defaultLoginSuccessMessage = '登录成功！';
         message.success(defaultLoginSuccessMessage);
         // 这里需要同步操作，set完初始状态后，才能跳转

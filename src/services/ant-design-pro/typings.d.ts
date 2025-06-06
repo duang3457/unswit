@@ -26,7 +26,7 @@ declare namespace API {
     // comments?: number; // 评论数
   };
 
-
+  // 接口返回safetyUser
   type CurrentUser = {
     id: number;
     userName: string;

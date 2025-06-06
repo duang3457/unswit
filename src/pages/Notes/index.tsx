@@ -35,7 +35,7 @@ const Notes: React.FC = () => {
     <PageContainer>
       <Card>
         <Alert
-          message={`这里是课程笔记栏，${userName+'同学' || '同学'}!`}
+          message={`这里是课程笔记导航栏，${userName+'同学' || '同学'}!`}
           type="success" // success,info,warning,error
           showIcon
           banner

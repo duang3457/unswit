@@ -1,4 +1,6 @@
-﻿export default [
+﻿
+
+export default [
   {
     path: '/user',
     layout: false,
@@ -47,8 +49,7 @@
 
   {
     path: '/admin',
-    name: '管理页',
-    icon: 'crown',
+    layout: false,
     access: 'canAdmin',
     component: './Admin',
     routes: [
@@ -57,15 +58,25 @@
     ],
   },
 
-  // {
-  //   name: '查询表格', 
-  //   icon: 'table', 
-  //   path: '/list', 
-  //   component: './TableList'
-  // },
-
   { path: '/', 
     redirect: '/welcome'
+  },
+
+  {
+    path: '/account',
+    routes: [
+      {
+        path: '/account/center',
+        name: '个人中心',
+        component: './Account/Center',
+      },
+      {
+        path: '/account/settings',
+        name: '个人设置',
+        component: './Account/Settings',
+      }
+    ]
+
   },
   
   {component: './404'},

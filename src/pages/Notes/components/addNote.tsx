@@ -6,14 +6,7 @@ import {
   ProFormText,
 } from '@ant-design/pro-components';
 import { Button, Form, message } from 'antd';
-
-const waitTime = (time: number = 100) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(true);
-    }, time);
-  });
-};
+import { addNote } from '@/services/ant-design-pro/api';
 
 const AddNote = () => {
   const [form] = Form.useForm<{ name: string; company: string }>();
@@ -37,10 +30,18 @@ const AddNote = () => {
       }}
       submitTimeout={2000}
       onFinish={async (values) => {
-        await waitTime(2000);
-        console.log(values.name);
-        message.success('提交成功');
-        return true;
+        try {
+          // 调用后端接口，body 中携带表单值
+          await addNote({
+            data: values, // 如果后端需要 { name, company } 格式的 JSON
+          });
+          message.success('笔记创建成功');
+          return true; // 返回 true 以关闭 ModalForm
+        } catch (error) {
+          console.error('添加笔记失败', error);
+          message.error('笔记创建失败，请重试');
+          return false; // 返回 false，保留 ModalForm 打开状态
+        }
       }}
     >
       <ProForm.Group>
@@ -48,7 +49,7 @@ const AddNote = () => {
           width="md"
           name="name"
           label="笔记名称"
-          tooltip="诸如：9021-XXXX笔记-拙见勿喷谢谢大家(不需要加上自己的名字，后面会自动加上)"
+          tooltip="诸如：9021-XXXX笔记。(不需要加上自己的名字，后面会自动加上)"
           placeholder="请输入笔记名称"
           rules={[{ required: true }]}
         />
@@ -64,12 +65,12 @@ const AddNote = () => {
         <ProFormText
           width="md"
           name="contract"
-          label="对应课程代码，如：9021，请确认是4位数字。提交成功后，笔记会自动出现在对应课程下面"
-          tooltip="如果你的课程代码与众不同，请联系我们，感谢！"
+          label="对应课程代码，如：9021"
+          tooltip="请确认是4位数字。提交成功后，笔记会自动出现在对应课程下面"
           placeholder="请输入课程代码"
           rules={[{ required: true }]}
         />
-        {/* <ProFormDateRangePicker name="contractTime" label="合同生效时间" /> */}
+        <ProFormText width="sm" name="id" label="leaturer名字（选填）" />
       </ProForm.Group>
       <ProForm.Group>
         <ProFormSelect
@@ -117,11 +118,11 @@ const AddNote = () => {
           rules={[{ required: true }]}
         />
       </ProForm.Group>
-      <ProFormText width="sm" name="id" label="leaturer名字（选填）" />
+      
       <ProFormText
         width="xl"
         name="project"
-        label="笔记链接(填入非法网站永久封号)"
+        label="笔记链接(请勿填入非法网站)"
         rules={[{ required: true , message: '任何笔记网站链接都可以，如notion, github-page, 技术论坛，博客等'}]}
       />
     </ModalForm>

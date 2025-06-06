@@ -23,6 +23,7 @@ const Register: React.FC = () => {
     try {
       // 注册
       const id = await register(values);
+      console.log('注册成功，返回的ID:', id);
       if (id) {
         const defaultLoginSuccessMessage = '注册成功！';
         message.success(defaultLoginSuccessMessage);
@@ -75,7 +76,7 @@ const Register: React.FC = () => {
                   size: 'large',
                   prefix: <UserOutlined className={styles.prefixIcon}/>,
                 }}
-                placeholder="起个狂拽帅气的名字吧"
+                placeholder="(选填)默认“编程侠”"
               />
               <ProFormText
                 name="userAccount"
