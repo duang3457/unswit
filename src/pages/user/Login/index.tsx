@@ -8,6 +8,7 @@ import Footer from '@/components/Footer';
 import { login } from '@/services/ant-design-pro/api';
 import styles from './index.less';
 import { Link } from '@umijs/preset-dumi/lib/theme';
+import { couldStartTrivia } from 'typescript';
 
 const LoginMessage: React.FC<{
   content: string;
@@ -30,7 +31,7 @@ const Login: React.FC = () => {
   const fetchUserInfo = async () => {
     // 这里只是拿到数据，并没有更新到globalState中
     const userInfo = await initialState?.fetchUserInfo?.();
-
+    console.log('fetchUserInfo', userInfo);
     if (userInfo) {
       console.log(userInfo);
       // 需要在登录成功后，调用setInitialState来更新globalState

@@ -9,6 +9,7 @@ export async function currentUser(options?: { [key: string]: any }) {
     '/api/user/current', 
     {
       method: 'GET',
+      credentials: 'include', // 确保携带cookie
       ...(options || {}),
   });
 }
