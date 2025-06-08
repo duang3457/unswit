@@ -8,7 +8,6 @@ import Footer from '@/components/Footer';
 import { login } from '@/services/ant-design-pro/api';
 import styles from './index.less';
 import { Link } from '@umijs/preset-dumi/lib/theme';
-import { couldStartTrivia } from 'typescript';
 
 const LoginMessage: React.FC<{
   content: string;

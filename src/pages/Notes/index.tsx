@@ -13,9 +13,18 @@ const Notes: React.FC = () => {
   const { initialState } = useModel('@@initialState');
   const [courses, setCourses] = useState<API.Course[]>([]);
   const userName = initialState?.currentUser?.userName;
+  const userId = initialState?.currentUser?.id;
 
   useEffect(() => {
-    currentNotes()
+    if (!userId) {
+      message.error('未获取到用户信息，无法加载笔记');
+      return;
+    }
+    currentNotes({
+            data: {
+              userId: userId,   // 传入用户 ID
+            }
+          })
       .then((res) => {
         if (res) {
           setCourses(res);
@@ -29,7 +38,7 @@ const Notes: React.FC = () => {
         message.error("获取笔记数据失败");
         console.error('调用失败：', err);
       });
-  }, []);
+  }, [userId]);
 
   return (
     <PageContainer>
@@ -50,7 +59,7 @@ const Notes: React.FC = () => {
             title="AI" 
             bordered 
             wrap 
-            extra={<AddNote />}
+            extra={<AddNote userId={userId}/>}
             tooltip="AI课包含AI-stream系列课程，包括9444,9417,9517,6713,9414等" 
             subTitle="AI课程" 
             >
