@@ -13,13 +13,13 @@ const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 const registerPath = '/user/register';
 const welcomePath = '/welcome';
-const rootPath = '/';
-const notesPath = '/notes';
-const forumPath = '/forum';
+// const rootPath = '/';
+// const notesPath = '/notes';
+// const forumPath = '/forum';
 /**
  * 无需用户登录态的页面
  */
-const NO_NEED_LOGIN_WHITE_LIST = [registerPath, welcomePath, loginPath, rootPath, notesPath, forumPath];
+const NO_NEED_LOGIN_WHITE_LIST = [registerPath, welcomePath, loginPath];
 
 /** 获取用户信息比较慢的时候会展示一个 loading */
 export const initialStateConfig = {
@@ -59,7 +59,6 @@ export async function getInitialState(): Promise<{
     currentUser,
     settings: defaultSettings,
   };
-
 }
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
