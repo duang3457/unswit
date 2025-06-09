@@ -9,7 +9,7 @@ import { Button, Form, message } from 'antd';
 import { addNote } from '@/services/ant-design-pro/api';
 
 interface AddNoteProps {
-  userId?: number;  // 如果 userId 可能 undefined，可以加问号
+  userId?: string;  // 如果 userId 可能 undefined，可以加问号
 }
 
 const AddNote: React.FC<AddNoteProps> = ({userId}) => {

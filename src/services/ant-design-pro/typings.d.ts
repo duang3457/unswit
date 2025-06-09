@@ -3,7 +3,14 @@
 
 declare namespace API {
   // 后端变化之后，最好同步一下这个，虽然不更新也没事
-  type Course = {
+  type CategoryCourse = {
+    categoryTitle: string; // 分类标题
+    toolTip?: string; // 分类描述
+    subTitle?: string; // 分类副标题
+    courseNotes: CourseNote[]; // 课程笔记列表
+  }
+
+  type CourseNote = {
     courseId: number;
     code: string; // 课程代码
     title: string; // 课程标题
@@ -28,7 +35,7 @@ declare namespace API {
 
   // 接口返回safetyUser
   type CurrentUser = {
-    id: number;
+    id: string;
     userName: string;
     userAccount: string;
     avatarUrl?: string;

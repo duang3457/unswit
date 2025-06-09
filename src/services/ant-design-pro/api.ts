@@ -76,7 +76,7 @@ export async function getNotices(options?: { [key: string]: any }) {
 /** 获取当前的笔记 GET /api/course */
 export async function currentNotes(
   options?: { [key: string]: any }) {
-  return request<API.Course[]>(
+  return request<Record<string, API.CategoryCourse>>(
     '/api/course', 
     {
       method: 'POST',
@@ -86,7 +86,7 @@ export async function currentNotes(
 
 /** 添加笔记 POST /api/note/add */
 export async function addNote(options?: { [key: string]: any }) {
-  return request<API.Course[]>(
+  return request<API.CategoryCourse[]>(
     '/api/note/add', 
     {
       method: 'POST',

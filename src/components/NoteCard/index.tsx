@@ -1,5 +1,6 @@
 import { ProFormGroup, ProFormSwitch, ProCard } from '@ant-design/pro-components';
 import React, { useEffect, useState } from 'react';
+import { Typography } from 'antd';
 
 interface NoteCardProps {
   courseId?: number; // 可选的课程ID
@@ -22,7 +23,14 @@ const CourseCard: React.FC<NoteCardProps> = ({ courseId, courseTitle, courseCode
 
   return (
     <ProCard
-      title={courseTitle}
+      title={
+        <Typography.Text
+          style={{ display: 'block', width: 200 }} // 根据你的布局调整宽度
+          ellipsis
+        >
+          {courseTitle}
+        </Typography.Text>
+      }
       tooltip={courseTooltip}
       defaultCollapsed
       collapsible
@@ -37,8 +45,8 @@ const CourseCard: React.FC<NoteCardProps> = ({ courseId, courseTitle, courseCode
             <ProFormSwitch
               name="Visible"
               noStyle
-              checkedChildren={'标记'}
-              unCheckedChildren={'未标'}
+              checkedChildren={'已置顶'}
+              unCheckedChildren={'未置顶'}
               fieldProps={{
                 checked: pinned,
                 onChange: (checked) => setPinned(checked),
@@ -55,9 +63,12 @@ const CourseCard: React.FC<NoteCardProps> = ({ courseId, courseTitle, courseCode
           onClick={() => window.open(note?.link, '_blank')}
           style={{ cursor: 'pointer' }}
           >
-          <a>
-            {note?.title}
-          </a>
+          <Typography.Text
+            style={{ display: 'block', width: '100%' }}
+            ellipsis
+          >
+            {note.title}
+          </Typography.Text>
         </ProCard>
       ))}
       

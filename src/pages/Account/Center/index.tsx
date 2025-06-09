@@ -171,47 +171,6 @@ const AccountCenter: FC = () => {
               }}
             />
           </TabPane>
-
-          {/* <TabPane tab="应用" key="4">
-            <ProList<{
-              id: number;
-              title: string;
-              status: '待审批' | '已通过' | '未通过';
-              updatedAt: string;
-            }>
-              rowKey="id"
-              headerTitle="我的应用"
-              dataSource={mockApplications}
-              metas={{
-                title: {
-                  dataIndex: 'title',
-                  render: (dom, entity) => (
-                    <a href="#!" style={{ fontWeight: 500 }}>
-                      {entity.title}
-                    </a>
-                  ),
-                },
-                subTitle: {
-                  render: (_, entity) => {
-                    let color: string;
-                    if (entity.status === '已通过') color = 'green';
-                    else if (entity.status === '待审批') color = 'orange';
-                    else color = 'red';
-                    return (
-                      <Tag color={color} style={{ padding: '0 8px' }}>
-                        {entity.status}
-                      </Tag>
-                    );
-                  },
-                },
-                extra: {
-                  render: (_, entity) => (
-                    <div style={{ textAlign: 'right', color: '#999' }}>{entity.updatedAt}</div>
-                  ),
-                },
-              }}
-            />
-          </TabPane> */}
         </Tabs>
       </ProCard>
     </PageContainer>
