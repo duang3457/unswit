@@ -1,5 +1,4 @@
 ﻿
-
 export default [
   {
     path: '/user',
@@ -13,6 +12,13 @@ export default [
       },
       {component: './404'},
     ],
+  },
+
+  {
+    path:"/nullLink",
+    layout: false,
+    component: './nullLink',
+    routes: [{path: "/nullLink"}]
   },
 
   {
@@ -74,9 +80,8 @@ export default [
         path: '/account/settings',
         name: '个人设置',
         component: './Account/Settings',
-      }
+      },
     ]
-
   },
   
   {component: './404'},

@@ -97,3 +97,35 @@ export async function addNote(options?: { [key: string]: any }) {
   });
 }
 
+
+/** 批量获取点赞状态 POST /api/notes/likes */
+export async function fetchNoteLikes(
+  options?: { [key: string]: any },
+) {
+  return request<API.LikesResponse>(
+    '/api/note/likes',
+    {
+      method: 'POST',
+      ...(options || {}),
+    },
+  );
+}
+
+/** 切换点赞 POST /api/notes/like */
+export async function toggleNoteLike(
+  noteId: number,
+  userId?: string, 
+  options?: { [key: string]: any },
+) {
+  return request<{ liked: boolean; likes: number }>(
+    '/api/note/like',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: { noteId, userId },
+      ...(options || {}),
+    },
+  );
+}

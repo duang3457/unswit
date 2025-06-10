@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { PageContainer } from '@ant-design/pro-components';
 import { Button, Card, List, Modal, Form, Input, Pagination, message } from 'antd';
 import { history } from 'umi';
+import AddPost from './components/addPost';
 
 interface Post {
   id: number;
@@ -60,14 +61,15 @@ const ForumPage: React.FC = () => {
 
   return (
     <PageContainer
-      header={{
-        title: '论坛',
-        breadcrumb: {},
-      }}
+      // header={{
+      //   title: '论坛',
+      //   breadcrumb: {},
+      // }}
     >
       <Button type="primary" onClick={() => setIsModalVisible(true)} style={{ marginBottom: 16 }}>
         新建帖子
       </Button>
+      <AddPost/>
 
       <List
             grid={{ gutter: 16, column: 1 }}

@@ -19,11 +19,11 @@ const AddNote: React.FC<AddNoteProps> = ({userId}) => {
       name: string;
       company: string;
     }>
-      title="新建笔记"
+      title="新建笔记(更新和删除笔记在个人中心)"
       trigger={
         <Button type="primary">
           <PlusOutlined />
-          新建笔记
+          添加我的笔记
         </Button>
       }
       form={form}

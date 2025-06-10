@@ -1,16 +1,20 @@
 import { ProFormGroup, ProFormSwitch, ProCard } from '@ant-design/pro-components';
 import React, { useEffect, useState } from 'react';
 import { Typography } from 'antd';
+import LikeButton from '@/pages/Notes/components/LikeButton';
 
 interface NoteCardProps {
+  userId?: string; // 可选的用户ID
   courseId?: number; // 可选的课程ID
-  courseCode?: string; // 可选的课程代码
   courseTitle?: string; // 可选的课程标题
   courseTooltip?: string; // 可选的课程描述
   notes?: API.Note[]; // 可选的笔记数据
+  initialLikes: Record<number, number>; // 可选的初始点赞数
+  initialLiked?: Record<number, boolean>; // 可选的初始点赞状态
 }
 
-const CourseCard: React.FC<NoteCardProps> = ({ courseId, courseTitle, courseCode, courseTooltip, notes}) => {
+const CourseCard: React.FC<NoteCardProps> = ({ courseId, courseTitle, courseTooltip, notes, initialLiked={}, initialLikes, userId}) => {
+ 
   const storageKey = `card_pinned_${courseId}`;
     const [pinned, setPinned] = useState<boolean>(() => {
       const saved = localStorage.getItem(storageKey);
@@ -25,21 +29,21 @@ const CourseCard: React.FC<NoteCardProps> = ({ courseId, courseTitle, courseCode
     <ProCard
       title={
         <Typography.Text
-          style={{ display: 'block', width: 200 }} // 根据你的布局调整宽度
+          style={{ display: 'block', width: 200 }}
           ellipsis
-        >
+        > 
           {courseTitle}
         </Typography.Text>
-      }
+      } // 超出部分省略
       tooltip={courseTooltip}
-      defaultCollapsed
-      collapsible
-      boxShadow
-      bordered
-      hoverable
-      gutter={[0, 4]}
+      defaultCollapsed  // 默认折叠
+      collapsible  // 可折叠
+      boxShadow // 卡片阴影
+      bordered // 边框
+      hoverable // 鼠标悬停时高亮
+      gutter={[0, 4]} // 卡片间距
       layout="center"
-      direction="column"
+      direction="column" 
       extra={
           <ProFormGroup>
             <ProFormSwitch
@@ -60,6 +64,7 @@ const CourseCard: React.FC<NoteCardProps> = ({ courseId, courseTitle, courseCode
           layout="center"
           key={note?.id}
           hoverable 
+          tooltip={note?.toolTip}
           onClick={() => window.open(note?.link, '_blank')}
           style={{ cursor: 'pointer' }}
           >
@@ -69,6 +74,16 @@ const CourseCard: React.FC<NoteCardProps> = ({ courseId, courseTitle, courseCode
           >
             {note.title}
           </Typography.Text>
+
+          {/* 点赞按钮：绝对定位到卡片右上角 */}
+          <div style={{ position: 'absolute', top: 8, right: 8 }}>
+            <LikeButton
+              userId={userId}
+              noteId={note.id}
+              initialCount={initialLikes[note.id]}
+              initialLiked={initialLiked[note.id] || false}
+            />
+          </div>
         </ProCard>
       ))}
       

@@ -2,71 +2,102 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { Card, Alert, Typography, message, Empty, Button } from 'antd';
 import { ReloadOutlined } from '@ant-design/icons';
 //import styles from './Welcome.less';
-import CourseCard from '@/components/NoteCard';
+import CourseCard from '@/pages/Notes/components/CourseCard';
 import { useModel } from 'umi';
 import { ProCard } from '@ant-design/pro-components';
 import AddNote from './components/addNote';
+import { fetchNoteLikes } from '@/services/ant-design-pro/api';
 
 import React, { useEffect, useState } from 'react';
 import { currentNotes } from '@/services/ant-design-pro/api';
 
 const Notes: React.FC = () => {
   const { initialState } = useModel('@@initialState');
-  const [categoryCourses, setCategoryCourses] = useState<Record<string, API.CategoryCourse>>({});
-  const [pinnedCourses, setPinnedCourses] = useState<API.CategoryCourse['courseNotes'][0][]>([]);
   const userName = initialState?.currentUser?.userName;
   const userId = initialState?.currentUser?.id;
 
-  // 当组件加载时，获取当前用户的笔记数据
+  const [categoryCourses, setCategoryCourses] = useState<Record<string, API.CategoryCourse>>({});
+  const [pinnedCourses, setPinnedCourses] = useState<API.CategoryCourse['courseNotes'][0][]>([]);
+  const [initialLikes, setInitialLikes] = useState<Record<number, number>>({});
+  const [initialLiked, setInitialLiked] = useState<Record<number, boolean>>({});
+
+  useEffect(() => {
+    console.log('initialLikes 更新了：', initialLikes);
+  }, [initialLikes]);
+
+  useEffect(() => {
+    console.log('initialLiked 更新了：', initialLiked);
+  }, [initialLiked]);
+  
+  // 1. 拉取分类 & 课程 & 笔记
   useEffect(() => {
     if (!userId) {
       message.error('未获取到用户信息，无法加载笔记');
       return;
     }
-    currentNotes({ data: {userId: userId, }})
-      .then((res) => {
-        if (res) {
-          setCategoryCourses(res);
-        } else {
-          message.error("notes接口返回数据为空");
-          console.error('接口返回错误：', );
-        }
+    currentNotes({ data: { userId } })
+      .then(res => {
+        if (res) setCategoryCourses(res);
+        else message.error('notes 接口返回数据为空');
       })
-      .catch((err) => {
-        message.error("获取笔记数据失败");
-        console.error('调用失败：', err);
-      });
+      .catch(() => message.error('获取笔记数据失败'));
   }, [userId]);
 
-  // 当 categoryCourses 变化时，去获取已标记的课程， 置顶
+  // 2. 置顶课程
   useEffect(() => {
-    const allCourses = Object.values(categoryCourses)
-      .flatMap((cat) => cat.courseNotes || []);
-    const pinned = allCourses.filter((course) => {
-      const storageKey = `card_pinned_${course.courseId}`;
-      return localStorage.getItem(storageKey) === 'true';
-    });
+    const allCourses = Object.values(categoryCourses).flatMap(cat => cat.courseNotes || []);
+    const pinned = allCourses.filter(course => localStorage.getItem(`card_pinned_${course.courseId}`) === 'true');
     setPinnedCourses(pinned);
   }, [categoryCourses]);
 
-    // 3. 如果想要固定顺序渲染：
-  // const order = ['IT', 'AI', 'DS', 'CB', 'EE', 'other'] as const;
-  // // 把 map 转成数组，并去掉不存在的项
-  // const orderedCategoryCourses = order
-  // .map((key) => categoryCourses[key])
-  // .filter((c): c is API.CategoryCourse => !!c);
+  // 3. 批量获取所有笔记的点赞状态
+  useEffect(() => {
+    // 提取所有笔记 ID
+    const allNotes = Object.values(categoryCourses)
+      .flatMap(cat => cat.courseNotes || [])
+      .flatMap(course => course.noteList || []);  // 后续优化：增加查询限制，如分页（前端展示也要分页） .slice((page-1)*pageSize, page*pageSize);
+    const ids = allNotes.map(n => n.id);
+    if (ids.length) {
+      fetchNoteLikes({ 
+        data: { 
+          noteIds: ids,
+          userId: userId}
+         })
+        .then(({ likes, likedByUser }) => {
+          setInitialLikes(likes);
+          setInitialLiked(likedByUser);
+        })
+        .catch(() => {
+          message.error('获取点赞状态失败');
+        });
+    }
+  }, [categoryCourses]);
 
-  // 或者不固定顺序
+  // 不固定顺序
   const orderedCategoryCourses = Object.values(categoryCourses);
+
+  console.log('渲染时的 initialLikes:', initialLikes);
+  console.log('渲染时的 initialLiked:', initialLiked);
 
   return (
     <PageContainer>
       <Card>
         <Alert
-          message={`这里是课程笔记导航栏，${userName+'同学' || '同学'}!`}
+          message={`${userName+'同学' || '同学'}，这里是课程笔记导航栏!`}
+          description={
+          <div>
+          俗话说得好：好记性不如烂笔头。一个好的学习方式是将自己在课上的输入，尝试在笔记中输出出来。
+          同时，我们希望能够做出一个友好的学习圈子：因为今日你的笔记，就是明日他人的宝藏。
+          虽然我们身处在不同的地方/教室/图书馆，但是我们的笔记可以将我们联系起来，
+          从此，空阔的教室将不再只有你一个人，我们在学习路上将不再孤独，我们的留学生活要更加充实。<br/> 
+          最后，让我们在笔下相遇，互相学习，共同进步。
+          Power! （口拙舌笨，词不达意，敬请谅解）
+          </div>
+          }
           type="success" // success,info,warning,error
           showIcon
           banner
+          closable
           style={{
             margin: -12,
             marginBottom: 24,
@@ -77,6 +108,7 @@ const Notes: React.FC = () => {
         <ProCard
           title="已置顶课程"
           bordered
+          wrap
           collapsible
           defaultCollapsed={false}
           gutter={[12, 12]}
@@ -96,15 +128,17 @@ const Notes: React.FC = () => {
             pinnedCourses.map((course) => (
               <ProCard
                 key={`pinned-${course.courseId}`}
-                colSpan={{ xs: 24, sm: 12, md: 8, lg: 6 }}
+                colSpan={{xs: 24, sm: 24, md: 12, lg: 12}}
                 bodyStyle={{ padding: 0 }}
               >
                 <CourseCard
+                  userId={userId}
                   courseId={course.courseId}
-                  courseCode={course.code}
                   courseTitle={course.title}
                   courseTooltip={course.toolTip}
                   notes={course.noteList || []}
+                  initialLikes={initialLikes}
+                  initialLiked={initialLiked}
                 />
               </ProCard>
             ))
@@ -113,6 +147,7 @@ const Notes: React.FC = () => {
           )}
         </ProCard>
 
+          {/* 分类课程 & 笔记列表 */}
         <Typography.Text strong>
           {orderedCategoryCourses.map((category) => (
             <ProCard 
@@ -129,13 +164,15 @@ const Notes: React.FC = () => {
               {(category.courseNotes || []).map((course) => (
                 <ProCard colSpan={{xs: 24, sm: 24, md: 12, lg: 12}} bodyStyle={{ padding: 0 }}>
                 <CourseCard 
+                  userId={userId}
                   courseId={course.courseId}
-                  courseCode={course.code} 
                   courseTitle={course.title} 
                   courseTooltip={course.toolTip} 
                   notes = {course.noteList || []}
-                  >
-                </CourseCard>
+                  initialLikes={initialLikes}
+                  initialLiked={initialLiked}
+                  />
+        
                 </ProCard>
               ))}
           </ProCard>
