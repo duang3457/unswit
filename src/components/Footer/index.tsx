@@ -18,7 +18,7 @@ const Footer: React.FC = () => {
         {
           key: 'codeNav',
           title: '加入我们',
-          href: 'https://www.code-nav.cn',
+          href: 'https://yang3457.oss-cn-beijing.aliyuncs.com/unswit_welcome/aa55ae6f826887fce8053d79d0d07c7.jpg',
           blankTarget: true,
         },
         {

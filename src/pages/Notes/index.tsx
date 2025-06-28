@@ -8,7 +8,7 @@ import { ProCard } from '@ant-design/pro-components';
 import AddNote from './components/addNote';
 import { fetchNoteLikes } from '@/services/ant-design-pro/api';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { currentNotes } from '@/services/ant-design-pro/api';
 
 const Notes: React.FC = () => {
@@ -73,11 +73,29 @@ const Notes: React.FC = () => {
     }
   }, [categoryCourses]);
 
+    // 所有笔记列表
+  const allNotesList = useMemo(() => {
+    return Object.values(categoryCourses)
+      .flatMap(cat => cat.courseNotes || [])
+      .flatMap(course => course.noteList || []);
+  }, [categoryCourses]);
+
+  // 最热笔记，按点赞数降序，取前5
+  const hottestNotes = useMemo(() => {
+    return [...allNotesList]
+      .sort((a, b) => (initialLikes[b.id] || 0) - (initialLikes[a.id] || 0))
+      .slice(0, 5);
+  }, [allNotesList, initialLikes]);
+
+  // 最新笔记，按创建时间降序，取前5
+  const latestNotes = useMemo(() => {
+    return [...allNotesList]
+      .sort((a, b) => new Date(b.createTime!).getTime() - new Date(a.createTime!).getTime())
+      .slice(0, 5);
+  }, [allNotesList]);
+
   // 不固定顺序
   const orderedCategoryCourses = Object.values(categoryCourses);
-
-  console.log('渲染时的 initialLikes:', initialLikes);
-  console.log('渲染时的 initialLiked:', initialLiked);
 
   return (
     <PageContainer>
@@ -103,6 +121,44 @@ const Notes: React.FC = () => {
             marginBottom: 24,
           }}
         />
+
+        <div style={{ display: 'flex', gap: 24, marginBottom: 12 }}>
+        {/* 最热笔记列表 */}
+        <ProCard title="最热笔记" bordered bodyStyle={{ padding: 2 }} style={{ marginBottom: 24 }}>
+          {hottestNotes.length > 0 ? (
+            hottestNotes.map(note => (
+              <Card key={note.id} size="small" style={{ marginBottom: 0 }} bordered={false}>
+                <Typography.Text strong underline ellipsis style={{ display: 'block', width: '100%',textAlign: 'center'  }}> 
+                  <Typography.Link href={note.link} target="_blank">
+                    {note.title}
+                  </Typography.Link>
+                </Typography.Text>
+              </Card>
+            ))
+          ) : (
+            <Empty description="暂无最热笔记" />
+          )}
+        </ProCard>
+
+        {/* 最新笔记列表 */}
+        <ProCard title="最新笔记" bordered bodyStyle={{ padding: 2 }} style={{ marginBottom: 24 }}>
+          {latestNotes.length > 0 ? (
+            latestNotes.map(note => (
+              <Card key={note.id} size="small" style={{ marginBottom: 0 }} bordered={false}>
+                <Typography.Text strong underline ellipsis style={{ display: 'block', width: '100%',textAlign: 'center'  }}> 
+              
+                  <Typography.Link href={note.link} target="_blank">
+                    {note.title}
+                  </Typography.Link>
+             
+                </Typography.Text>
+              </Card>
+            ))
+          ) : (
+            <Empty description="暂无最新笔记" />
+          )}
+        </ProCard>
+        </div>
 
         {/* 顶部：已标记的课程 */}
         <ProCard

@@ -36,6 +36,8 @@ declare namespace API {
     // views?: number; // 浏览量
     likes?: number; // 点赞数
     // comments?: number; // 评论数
+    createTime?: Date; // 创建时间
+    updateTime?: Date; // 更新时间
   };
 
   // 接口返回safetyUser
