@@ -42,7 +42,6 @@ const AddNote: React.FC<AddNoteProps> = ({userId}) => {
               userId: userId,   // 传入用户 ID
             }
           });
-          message.success('笔记创建成功');
           return true; // 返回 true 以关闭 ModalForm
         } catch (error) {
           console.error('添加笔记失败', error);
@@ -133,6 +132,13 @@ const AddNote: React.FC<AddNoteProps> = ({userId}) => {
           rules={[{ required: true }]}
         />
       </ProForm.Group>
+
+      <ProFormText
+        width="xl"
+        name="toolTip"
+        label="笔记简介(选填)"
+        placeholder="请输入笔记简介"
+      />
       
       <ProFormText
         width="xl"

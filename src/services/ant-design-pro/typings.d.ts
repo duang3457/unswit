@@ -26,7 +26,7 @@ declare namespace API {
   }
 
   type Note = {
-    id: number;
+    id: number; // 笔记ID
     courseId: number; // 课程ID
     title?: string;
     link?: string;

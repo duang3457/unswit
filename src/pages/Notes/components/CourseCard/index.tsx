@@ -29,7 +29,7 @@ const CourseCard: React.FC<NoteCardProps> = ({ courseId, courseTitle, courseTool
     <ProCard
       title={
         <Typography.Text
-          style={{ display: 'block', width: 200 }}
+          style={{ display: 'block', width: '100%' }}
           ellipsis
         > 
           {courseTitle}
@@ -64,16 +64,26 @@ const CourseCard: React.FC<NoteCardProps> = ({ courseId, courseTitle, courseTool
           layout="center"
           key={note?.id}
           hoverable 
-          tooltip={note?.toolTip}
+          title={
+              <Typography.Text
+                style={{ display: 'block', width: '100%' }}
+                ellipsis
+              > 
+                {note.title}
+              </Typography.Text>
+            } 
+          //headStyle={{ paddingTop: 4, paddingBottom: 4 }}
+          bodyStyle={{ paddingTop: 0 }}
+          tooltip={'【' + note.author + '】' + note?.toolTip || ''}
           onClick={() => window.open(note?.link, '_blank')}
           style={{ cursor: 'pointer' }}
           >
-          <Typography.Text
+          {/* <Typography.Text
             style={{ display: 'block', width: '100%' }}
             ellipsis
           >
             {note.title}
-          </Typography.Text>
+          </Typography.Text> */}
 
           {/* 点赞按钮：绝对定位到卡片右上角 */}
           <div style={{ position: 'absolute', top: 8, right: 8 }}>
