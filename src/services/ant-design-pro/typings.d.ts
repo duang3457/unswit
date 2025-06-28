@@ -3,7 +3,7 @@
 
 declare namespace API {
   // 后端变化之后，最好同步一下这个，虽然不更新也没事
-  type LikesResponse {
+  type LikesResponse = {
     likes: Record<number, number>;  // {ID1: 点赞数,ID2: 点赞数, ...}
     likedByUser: Record<number, boolean>; // {ID1: 是否点赞, ID2: 是否点赞, ...} UserID作为参数，拿到这条返回值
   }
