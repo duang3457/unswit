@@ -1,6 +1,6 @@
 import { PageContainer } from '@ant-design/pro-layout';
 import { Card, Alert, Typography, message, Empty, Button } from 'antd';
-import { ReloadOutlined } from '@ant-design/icons';
+import { ReloadOutlined, FireTwoTone, ClockCircleTwoTone } from '@ant-design/icons';
 //import styles from './Welcome.less';
 import CourseCard from '@/pages/Notes/components/CourseCard';
 import { useModel } from 'umi';
@@ -128,11 +128,40 @@ const Notes: React.FC = () => {
           {hottestNotes.length > 0 ? (
             hottestNotes.map(note => (
               <Card key={note.id} size="small" style={{ marginBottom: 0 }} bordered={false}>
-                <Typography.Text strong underline ellipsis style={{ display: 'block', width: '100%',textAlign: 'center'  }}> 
-                  <Typography.Link href={note.link} target="_blank">
-                    {note.title}
-                  </Typography.Link>
-                </Typography.Text>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'flex-start',    // 整个容器顶部对齐
+                    width: '100%',
+                  }}
+                >
+                  {/* 左侧：标题块，占满剩余空间，居中 */}
+                  <div
+                    style={{
+                      flex: 1,
+                      display: 'flex',
+                      justifyContent: 'center',   // 水平居中
+                      paddingRight: 8,            // 避免和右侧内容贴太紧
+                    }}
+                  >
+                    <Typography.Text
+                      strong
+                      underline
+                      ellipsis
+                      style={{ textAlign: 'center', width: '100%' }}
+                    >
+                      <Typography.Link href={note.link} target="_blank">
+                        {note.title}
+                      </Typography.Link>
+                    </Typography.Text>
+                  </div>
+
+                  {/* 右侧：热度 & 时间 */}
+                  <Typography.Text type="secondary" style={{ fontSize: 12, whiteSpace: 'nowrap' }}>
+                    <FireTwoTone twoToneColor="#eb2f96"/> {(initialLikes[note.id] || 0) * 100}
+     
+                  </Typography.Text>
+                </div>
               </Card>
             ))
           ) : (
@@ -145,13 +174,43 @@ const Notes: React.FC = () => {
           {latestNotes.length > 0 ? (
             latestNotes.map(note => (
               <Card key={note.id} size="small" style={{ marginBottom: 0 }} bordered={false}>
-                <Typography.Text strong underline ellipsis style={{ display: 'block', width: '100%',textAlign: 'center'  }}> 
-              
-                  <Typography.Link href={note.link} target="_blank">
-                    {note.title}
-                  </Typography.Link>
-             
-                </Typography.Text>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'flex-start',    // 整个容器顶部对齐
+                    width: '100%',
+                  }}
+                >
+                  {/* 左侧：标题块，占满剩余空间，居中 */}
+                  <div
+                    style={{
+                      flex: 1,
+                      display: 'flex',
+                      justifyContent: 'center',   // 水平居中
+                      paddingRight: 8,            // 避免和右侧内容贴太紧
+                    }}
+                  >
+                    <Typography.Text
+                      strong
+                      underline
+                      ellipsis
+                      style={{ textAlign: 'center', width: '100%' }}
+                    >
+                      <Typography.Link href={note.link} target="_blank">
+                        {note.title}
+                      </Typography.Link>
+                    </Typography.Text>
+                  </div>
+
+                  {/* 右侧： 时间 */}
+                  <Typography.Text type="secondary" style={{ fontSize: 12, whiteSpace: 'nowrap' }}>
+               
+                    <ClockCircleTwoTone />{note.createTime
+                      && new Date(note.createTime)
+                          .toLocaleDateString('zh-CN', { month: 'numeric', day: 'numeric' })
+                    }
+                  </Typography.Text>
+                </div>
               </Card>
             ))
           ) : (
