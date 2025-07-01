@@ -20,7 +20,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({
 }) => {
   const [count, setCount] = useState<number>(initialCount);
   const [liked, setLiked] = useState<boolean>(initialLiked);
-  console.log("LikeButton props", { userId, noteId, initialCount, initialLiked });
+  // console.log("LikeButton props", { userId, noteId, initialCount, initialLiked });
 
   useEffect(() => {
     setCount(initialCount ?? 0);
@@ -37,7 +37,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({
   //     fetchNoteLikes({
   //       data: {
   //         noteIds: [noteId],
-  //         userId: userId, 
+  //         userId: userId,
   //       }
   //     })
   //       .then(({ likes, likedByUser }) => {
@@ -59,7 +59,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({
     setCount(prevLiked ? prevCount - 1 : prevCount + 1);
 
     try {
-      const { liked: newLiked, likes: newCount } = await toggleNoteLike(noteId,userId);
+      const { liked: newLiked, likes: newCount } = await toggleNoteLike(noteId, userId);
       setLiked(newLiked);
       setCount(newCount);
     } catch {
@@ -69,7 +69,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({
       message.error('点赞操作失败，请稍后重试');
     }
   };
-  console.log("count, liked", { count, liked });
+  // console.log("count, liked", { count, liked });
   return (
     <Space onClick={onToggle} style={{ cursor: 'pointer' }}>
       {liked ? <HeartFilled style={{ color: 'red' }} /> : <HeartOutlined />}

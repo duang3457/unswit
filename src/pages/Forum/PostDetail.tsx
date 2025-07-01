@@ -1,7 +1,7 @@
-import React from 'react';
-import { useParams, history } from 'umi';
+import React, { useEffect, useState } from 'react';
+import { useParams, history, request } from 'umi';
 import { PageContainer } from '@ant-design/pro-components';
-import { Card, Button } from 'antd';
+import { Card, Button, Spin, message } from 'antd';
 
 interface Post {
   id: number;
@@ -11,30 +11,35 @@ interface Post {
   createdAt: string;
 }
 
-// 假数据，后面可以换成后端请求
-const mockPosts: Post[] = [
-  {
-    id: 1,
-    title: '欢迎来到论坛',
-    content: '这是一个示例帖子，欢迎发表您的看法！',
-    author: 'Admin',
-    createdAt: '2025-06-01',
-  },
-  {
-    id: 2,
-    title: '如何使用Ant Design Pro搭建论坛？',
-    content: '这里可以讨论技术、问题、想法等。',
-    author: 'Yang',
-    createdAt: '2025-06-01',
-  },
-];
-
 const PostDetailPage: React.FC = () => {
   const params = useParams<{ id: string }>();
   const postId = Number(params.id);
+  const [post, setPost] = useState<Post | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  // 找到对应帖子
-  const post = mockPosts.find(item => item.id === postId);
+  useEffect(() => {
+    setLoading(true);
+    request<Post>(`/api/posts/${postId}`, {
+      method: 'GET',
+    })
+      .then((data) => {
+        setPost(data);
+      })
+      .catch((error) => {
+        message.error('加载帖子失败，请稍后重试');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [postId]);
+
+  if (loading) {
+    return (
+      <PageContainer>
+        <Spin tip="加载中..." />
+      </PageContainer>
+    );
+  }
 
   if (!post) {
     return (
@@ -54,12 +59,18 @@ const PostDetailPage: React.FC = () => {
       header={{
         title: post.title,
         breadcrumb: {},
-        onBack: () => history.goBack(),  // umi4是back方法,我们用的是umi3
+        onBack: () => history.goBack(),
       }}
     >
       <Card>
-        <p><strong>作者：</strong>{post.author}</p>
-        <p><strong>发布时间：</strong>{post.createdAt}</p>
+        <p>
+          <strong>作者：</strong>
+          {post.author}
+        </p>
+        <p>
+          <strong>发布时间：</strong>
+          {post.createdAt}
+        </p>
         <hr />
         <div style={{ marginTop: 16 }}>{post.content}</div>
       </Card>

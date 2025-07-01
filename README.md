@@ -1,7 +1,14 @@
+# unswit frontend
 
-# 用户中心前端
+## Version
 
-This project is initialized with [用户中心](https://pro.ant.design). Follow is the quick guide for how to use.
+npm = 16.20.2
+
+## Framework/component library used in the project
+
+[umi 框架](https://umijs.org/)
+
+[ant Design Pro 组件库](https://pro.ant.design)
 
 ## Environment Prepare
 
@@ -19,14 +26,18 @@ yarn
 
 ## Provided Scripts
 
-用户中心 provides some useful script to help you quick start and build with web project, code style check and test.
-
 Scripts provided in `package.json`. It's safe to modify or add additional script:
 
 ### Start project
 
 ```bash
 npm start
+```
+
+or
+
+```bash
+npm run start:dev
 ```
 
 ### Build project
@@ -55,5 +66,8 @@ npm test
 
 ## More
 
-You can view full document on our [official website](https://pro.ant.design). And welcome any feedback in our [github](https://github.com/ant-design/ant-design-pro).
+欢迎加入我们
 
+Welcome to join us
+
+V: a3442141576
