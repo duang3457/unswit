@@ -119,3 +119,15 @@ export async function fetchPosts(
     ...(options || {}),
   });
 }
+
+/** 创建新帖子 POST /api/posts */
+export async function createPost(body: API.CreatePostParams, options?: { [key: string]: any }) {
+  return request<API.BaseResponse<number>>('/api/blogs', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}

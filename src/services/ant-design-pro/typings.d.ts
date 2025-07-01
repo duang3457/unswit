@@ -3,9 +3,16 @@
 
 declare namespace API {
   // 后端变化之后，最好同步一下这个，虽然不更新也没事
+  type CreatePostParams = {
+    title: string; // 帖子标题
+    content: string; // 帖子内容
+  };
+
   type BlogList = {
-    blogs: BlogSummary[];
+    blogSumList: BlogSummary[];
     total: number; // 总数
+    pageSize?: number; // 每页数量
+    page?: number; // 当前页码
   };
 
   type BlogSummary = {
