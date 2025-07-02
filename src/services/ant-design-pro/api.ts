@@ -120,6 +120,17 @@ export async function fetchPosts(
   });
 }
 
+/** 获取帖子详情 GET /api/posts/:id */
+export async function fetchPostDetail(id: number, options?: { [key: string]: any }) {
+  return request<API.BlogComment>(`/api/blogs/${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
+
 /** 创建新帖子 POST /api/posts */
 export async function createPost(body: API.CreatePostParams, options?: { [key: string]: any }) {
   return request<API.BaseResponse<number>>('/api/blogs', {
