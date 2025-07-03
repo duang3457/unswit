@@ -133,12 +133,28 @@ export async function fetchPostDetail(id: number, options?: { [key: string]: any
 
 /** 创建新帖子 POST /api/posts */
 export async function createPost(body: API.CreatePostParams, options?: { [key: string]: any }) {
-  return request<API.BaseResponse<number>>('/api/blogs', {
+  return request<API.BaseResponse<number>>('/api/blogs/add', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     data: body,
+    ...(options || {}),
+  });
+}
+
+/** 创建评论 POST /api/comments */
+export async function createComment(body: API.CreateCommentParams, options?: { [key: string]: any }) {
+  return request<API.CommentResponse>('/api/comments/add', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: {
+      blogId: body.blogId,
+      parentId: body.parentId || 0,
+      content: body.content,
+    },
     ...(options || {}),
   });
 }
