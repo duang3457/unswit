@@ -158,3 +158,11 @@ export async function createComment(body: API.CreateCommentParams, options?: { [
     ...(options || {}),
   });
 }
+
+/** 点赞帖子 PUT /blogs/like/{id} */
+export async function likeBlog(id: number, options?: { [key: string]: any }) {
+  return request<{ success: boolean; errorMsg?: string; data?: any; total?: number }>(`/api/blogs/like/${id}`, {
+    method: 'PUT',
+    ...(options || {}),
+  });
+}
