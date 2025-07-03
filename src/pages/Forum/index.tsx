@@ -3,9 +3,7 @@ import { PageContainer } from '@ant-design/pro-components';
 import { Card, List, Pagination, message, Row, Col, Typography } from 'antd';
 import { history } from 'umi';
 import styled from 'styled-components';
-import {
-  fetchPosts as apiFetchPosts
-} from '@/services/ant-design-pro/api';
+import { fetchPosts as apiFetchPosts } from '@/services/ant-design-pro/api';
 import CreatePost from './Posts/components/CreatePost';
 import ForumLikeButton from './Posts/components/LikeButton';
 
@@ -29,11 +27,11 @@ const HotPostCard = styled(Card)`
   && {
     margin-bottom: 8px;
     cursor: pointer;
-    
+
     .ant-card-body {
       padding: 12px 16px;
     }
-    
+
     &:hover {
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     }
@@ -57,35 +55,36 @@ const CenteredContainer = styled.div`
 const mockHotPosts: API.BlogSummary[] = [
   {
     id: 999,
-    title: "COMP3900项目经验分享 - 从零到部署完整指南",
-    content: "分享我们团队在COMP3900项目中的开发经验，包括前后端架构设计、数据库优化、部署流程等...",
-    author: "学长小王",
-    updateTime: "2024-01-15T10:30:00"
+    title: 'COMP3900项目经验分享 - 从零到部署完整指南',
+    content:
+      '分享我们团队在COMP3900项目中的开发经验，包括前后端架构设计、数据库优化、部署流程等...',
+    author: '学长小王',
+    updateTime: '2024-01-15T10:30:00',
   },
   {
     id: 998,
-    title: "数据结构与算法期末复习重点整理",
-    content: "整理了COMP3121课程的所有重点知识点，包括动态规划、图算法、排序算法等，附带练习题...",
-    author: "算法大神",
-    updateTime: "2024-01-14T16:45:00"
-  }
+    title: '数据结构与算法期末复习重点整理',
+    content: '整理了COMP3121课程的所有重点知识点，包括动态规划、图算法、排序算法等，附带练习题...',
+    author: '算法大神',
+    updateTime: '2024-01-14T16:45:00',
+  },
 ];
 
 const mockLatestPosts: API.BlogSummary[] = [
   {
     id: 996,
-    title: "求组队！COMP6080 Assignment 3",
-    content: "正在寻找队友一起完成COMP6080的第三个作业，React项目，有经验的同学请联系...",
-    author: "新同学小李",
-    updateTime: "2024-01-16T09:15:00"
+    title: '求组队！COMP6080 Assignment 3',
+    content: '正在寻找队友一起完成COMP6080的第三个作业，React项目，有经验的同学请联系...',
+    author: '新同学小李',
+    updateTime: '2024-01-16T09:15:00',
   },
   {
     id: 995,
-    title: "Kensington附近租房信息分享",
-    content: "刚找到不错的房源，地理位置优越，价格合理，有需要的同学可以了解一下...",
-    author: "租房小助手",
-    updateTime: "2024-01-16T08:30:00"
-  }
+    title: 'Kensington附近租房信息分享',
+    content: '刚找到不错的房源，地理位置优越，价格合理，有需要的同学可以了解一下...',
+    author: '租房小助手',
+    updateTime: '2024-01-16T08:30:00',
+  },
 ];
 
 const ForumPage: React.FC = () => {
@@ -102,7 +101,7 @@ const ForumPage: React.FC = () => {
   const loadHotPosts = async () => {
     try {
       // 模拟API延迟
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 100));
       setHotPosts(mockHotPosts);
     } catch (error) {
       console.error('加载热门帖子失败:', error);
@@ -113,7 +112,7 @@ const ForumPage: React.FC = () => {
   const loadLatestPosts = async () => {
     try {
       // 模拟API延迟
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 100));
       setLatestPosts(mockLatestPosts);
     } catch (error) {
       console.error('加载最新帖子失败:', error);
@@ -145,7 +144,7 @@ const ForumPage: React.FC = () => {
 
   useEffect(() => {
     const counts: Record<number, number> = {};
-    posts.forEach(post => {
+    posts.forEach((post) => {
       counts[post.id] = likeCounts[post.id] || 0;
     });
     setLikeCounts(counts);
@@ -184,11 +183,7 @@ const ForumPage: React.FC = () => {
             <SectionContainer>
               <SectionTitle level={4}>🔥 热门帖子</SectionTitle>
               {hotPosts.map((post, index) => (
-                <HotPostCard
-                  key={post.id}
-                  size="small"
-                  onClick={() => handlePostClick(post.id)}
-                >
+                <HotPostCard key={post.id} size="small" onClick={() => handlePostClick(post.id)}>
                   <div>
                     <Typography.Text strong>
                       {index + 1}. {post.title}
@@ -201,16 +196,12 @@ const ForumPage: React.FC = () => {
               ))}
             </SectionContainer>
           </Col>
-          
+
           <Col xs={24} sm={12}>
             <SectionContainer>
               <SectionTitle level={4}>⭐ 最新帖子</SectionTitle>
               {latestPosts.map((post) => (
-                <HotPostCard
-                  key={post.id}
-                  size="small"
-                  onClick={() => handlePostClick(post.id)}
-                >
+                <HotPostCard key={post.id} size="small" onClick={() => handlePostClick(post.id)}>
                   <div>
                     <Typography.Text strong>{post.title}</Typography.Text>
                     <PostMeta>

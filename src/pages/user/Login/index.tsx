@@ -43,7 +43,7 @@ const Login: React.FC = () => {
     try {
       // 有全局响应拦截器（位于plugins/globalRequest.ts），所以不需要在这里处理错误
       // 成功返回：API.BaseResponse.data(即user = API.CurrentUser)，隐藏掉了code,message,description部分
-      const response = await login({...values, type});
+      const response = await login({ ...values, type });
 
       if (response) {
         const defaultLoginSuccessMessage = '登录成功！';
@@ -54,8 +54,8 @@ const Login: React.FC = () => {
         /** 此方法会跳转到 redirect 参数所在的位置 */
 
         if (!history) return;
-        const {query} = history.location;
-        const {redirect} = query as {
+        const { query } = history.location;
+        const { redirect } = query as {
           redirect: string;
         };
         // 将当前页面的地址更改为 redirect 参数指定的路径（如果没有，则跳转到主页 '/'）。

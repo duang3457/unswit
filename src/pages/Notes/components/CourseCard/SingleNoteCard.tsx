@@ -8,16 +8,14 @@ interface SingleNoteCardProps {
 
 const SingleNoteCard: React.FC<SingleNoteCardProps> = ({ note }) => {
   return (
-        <ProCard 
-          key={note?.id}
-          hoverable 
-          onClick={() => window.open(note?.link, '_blank')}
-          style={{ cursor: 'pointer' }}
-          >
-          <a>
-            {note?.title}
-          </a>
-        </ProCard>
+    <ProCard
+      key={note?.id}
+      hoverable
+      onClick={() => window.open(note?.link, '_blank')}
+      style={{ cursor: 'pointer' }}
+    >
+      <a>{note?.title}</a>
+    </ProCard>
   );
 };
 

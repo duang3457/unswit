@@ -3,7 +3,6 @@ import { Card } from 'antd';
 import styled from 'styled-components';
 import ForumLikeButton from './LikeButton';
 
-
 const ImageContainer = styled.div`
   margin: 16px 0;
 `;
@@ -54,4 +53,4 @@ const PostContent: React.FC<{ blog: API.Blog }> = ({ blog }) => {
   );
 };
 
-export default PostContent; 
+export default PostContent;

@@ -26,12 +26,20 @@ const AccountSetting: FC = () => {
     // TODO: 调用接口更新用户基本信息
   };
 
-  const handlePasswordSubmit = async (values: { oldPassword: string; newPassword: string; confirmPassword: string }) => {
+  const handlePasswordSubmit = async (values: {
+    oldPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+  }) => {
     console.log('提交密码修改：', values);
     // TODO: 校验 oldPassword 是否正确，若正确则修改为 newPassword
   };
 
-  const handleNotificationSubmit = async (values: { emailNotify: boolean; smsNotify: boolean; pushNotify: boolean }) => {
+  const handleNotificationSubmit = async (values: {
+    emailNotify: boolean;
+    smsNotify: boolean;
+    pushNotify: boolean;
+  }) => {
     console.log('提交通知设置：', values);
     // TODO: 提交通知偏好
   };
@@ -46,11 +54,7 @@ const AccountSetting: FC = () => {
             initialValues={mockUserInfo}
             submitter={{
               render: (props, doms) => {
-                return (
-                  <div style={{ textAlign: 'right' }}>
-                    {doms}
-                  </div>
-                );
+                return <div style={{ textAlign: 'right' }}>{doms}</div>;
               },
             }}
             onFinish={handleBasicSubmit}
@@ -100,11 +104,7 @@ const AccountSetting: FC = () => {
             layout="vertical"
             submitter={{
               render: (props, doms) => {
-                return (
-                  <div style={{ textAlign: 'right' }}>
-                    {doms}
-                  </div>
-                );
+                return <div style={{ textAlign: 'right' }}>{doms}</div>;
               },
             }}
             onFinish={handlePasswordSubmit}
@@ -191,11 +191,7 @@ const AccountSetting: FC = () => {
             }}
             submitter={{
               render: (props, doms) => {
-                return (
-                  <div style={{ textAlign: 'right' }}>
-                    {doms}
-                  </div>
-                );
+                return <div style={{ textAlign: 'right' }}>{doms}</div>;
               },
             }}
             onFinish={handleNotificationSubmit}

@@ -73,4 +73,4 @@ const ForumLikeButton: React.FC<ForumLikeButtonProps> = ({
   );
 };
 
-export default ForumLikeButton; 
+export default ForumLikeButton;

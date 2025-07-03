@@ -22,7 +22,7 @@ const SidebarButton = styled(Button)`
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -92,4 +92,4 @@ const SidebarActions: React.FC<SidebarActionsProps> = ({ onScrollToTop, onScroll
   );
 };
 
-export default SidebarActions; 
+export default SidebarActions;

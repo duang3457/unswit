@@ -37,4 +37,4 @@ const CommentList: React.FC<{ comments: API.Comment[] }> = ({ comments }) => {
   );
 };
 
-export default CommentList; 
+export default CommentList;

@@ -1,8 +1,8 @@
 import React, { useRef } from 'react';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable, { TableDropdown } from '@ant-design/pro-table';
-import { searchUsers } from "@/services/ant-design-pro/api";
-import {Image} from "antd";
+import { searchUsers } from '@/services/ant-design-pro/api';
+import { Image } from 'antd';
 
 const columns: ProColumns<API.CurrentUser>[] = [
   {
@@ -72,7 +72,6 @@ const columns: ProColumns<API.CurrentUser>[] = [
     title: '操作',
     valueType: 'option',
     render: (text, record, _, action) => [
-      
       <a
         key="editable"
         onClick={() => {
@@ -111,7 +110,7 @@ export default () => {
         return {
           data: userList,
           success: true,
-        }
+        };
       }}
       editable={{
         type: 'multiple',
@@ -141,6 +140,6 @@ export default () => {
       }}
       dateFormatter="string"
       headerTitle="用户列表"
-    /> 
+    />
   );
 };

@@ -43,10 +43,7 @@ const CreatePost: React.FC<CreatePostModalProps> = ({ onSuccess }) => {
 
   return (
     <>
-      <StyledButton 
-        type="primary" 
-        onClick={() => setIsModalVisible(true)}
-      >
+      <StyledButton type="primary" onClick={() => setIsModalVisible(true)}>
         新建帖子
       </StyledButton>
 
@@ -80,4 +77,4 @@ const CreatePost: React.FC<CreatePostModalProps> = ({ onSuccess }) => {
   );
 };
 
-export default CreatePost; 
+export default CreatePost;

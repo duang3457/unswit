@@ -31,7 +31,13 @@ const StyledButton = styled(Button)`
   min-width: 96px;
 `;
 
-const CommentEditor: React.FC<CommentEditorProps> = ({ value, loading, onChange, onSubmit, refAnchor }) => (
+const CommentEditor: React.FC<CommentEditorProps> = ({
+  value,
+  loading,
+  onChange,
+  onSubmit,
+  refAnchor,
+}) => (
   <>
     <div ref={refAnchor} />
     <StyledForm layout="vertical" onFinish={onSubmit}>
@@ -46,11 +52,7 @@ const CommentEditor: React.FC<CommentEditorProps> = ({ value, loading, onChange,
         />
       </StyledFormItem>
       <StyledFormItem>
-        <StyledButton
-          type="primary"
-          htmlType="submit"
-          loading={loading}
-        >
+        <StyledButton type="primary" htmlType="submit" loading={loading}>
           发表评论
         </StyledButton>
       </StyledFormItem>
@@ -58,4 +60,4 @@ const CommentEditor: React.FC<CommentEditorProps> = ({ value, loading, onChange,
   </>
 );
 
-export default CommentEditor; 
+export default CommentEditor;

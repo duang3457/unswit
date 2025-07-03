@@ -1,18 +1,13 @@
 import { PlusOutlined } from '@ant-design/icons';
-import {
-  ModalForm,
-  ProForm,
-  ProFormSelect,
-  ProFormText,
-} from '@ant-design/pro-components';
+import { ModalForm, ProForm, ProFormSelect, ProFormText } from '@ant-design/pro-components';
 import { Button, Form, message } from 'antd';
 import { addNote } from '@/services/ant-design-pro/api';
 
 interface AddNoteProps {
-  userId?: string;  // 如果 userId 可能 undefined，可以加问号
+  userId?: string; // 如果 userId 可能 undefined，可以加问号
 }
 
-const AddNote: React.FC<AddNoteProps> = ({userId}) => {
+const AddNote: React.FC<AddNoteProps> = ({ userId }) => {
   const [form] = Form.useForm<{ name: string; company: string }>();
   return (
     <ModalForm<{
@@ -38,9 +33,9 @@ const AddNote: React.FC<AddNoteProps> = ({userId}) => {
           // 调用后端接口，body 中携带表单值
           await addNote({
             data: {
-              note,   // 包含表单中所有字段
-              userId: userId,   // 传入用户 ID
-            }
+              note, // 包含表单中所有字段
+              userId: userId, // 传入用户 ID
+            },
           });
           return true; // 返回 true 以关闭 ModalForm
         } catch (error) {
@@ -133,18 +128,18 @@ const AddNote: React.FC<AddNoteProps> = ({userId}) => {
         />
       </ProForm.Group>
 
-      <ProFormText
-        width="xl"
-        name="toolTip"
-        label="笔记简介(选填)"
-        placeholder="请输入笔记简介"
-      />
-      
+      <ProFormText width="xl" name="toolTip" label="笔记简介(选填)" placeholder="请输入笔记简介" />
+
       <ProFormText
         width="xl"
         name="link"
         label="笔记链接(请勿填入非法网站)"
-        rules={[{ required: true , message: '任何笔记网站链接都可以，如notion, github-page, 技术论坛，博客等'}]}
+        rules={[
+          {
+            required: true,
+            message: '任何笔记网站链接都可以，如notion, github-page, 技术论坛，博客等',
+          },
+        ]}
       />
     </ModalForm>
   );

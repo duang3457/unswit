@@ -122,7 +122,7 @@ const PostDetailPage: React.FC = () => {
         <CommentEditor
           value={commentContent}
           loading={commentLoading}
-          onChange={e => setCommentContent(e.target.value)}
+          onChange={(e) => setCommentContent(e.target.value)}
           onSubmit={handleSubmitComment}
           refAnchor={commentAnchorRef}
         />

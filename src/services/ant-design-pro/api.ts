@@ -144,7 +144,10 @@ export async function createPost(body: API.CreatePostParams, options?: { [key: s
 }
 
 /** 创建评论 POST /api/comments */
-export async function createComment(body: API.CreateCommentParams, options?: { [key: string]: any }) {
+export async function createComment(
+  body: API.CreateCommentParams,
+  options?: { [key: string]: any },
+) {
   return request<API.CommentResponse>('/api/comments/add', {
     method: 'POST',
     headers: {
@@ -161,8 +164,11 @@ export async function createComment(body: API.CreateCommentParams, options?: { [
 
 /** 点赞帖子 PUT /blogs/like/{id} */
 export async function likeBlog(id: number, options?: { [key: string]: any }) {
-  return request<{ success: boolean; errorMsg?: string; data?: any; total?: number }>(`/api/blogs/like/${id}`, {
-    method: 'PUT',
-    ...(options || {}),
-  });
+  return request<{ success: boolean; errorMsg?: string; data?: any; total?: number }>(
+    `/api/blogs/like/${id}`,
+    {
+      method: 'PUT',
+      ...(options || {}),
+    },
+  );
 }

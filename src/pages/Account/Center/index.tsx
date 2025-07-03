@@ -12,7 +12,6 @@ const { TabPane } = Tabs;
 import RcResizeObserver from 'rc-resize-observer';
 import { useState } from 'react';
 
-
 interface UserInfo {
   name: string;
   avatar: string;
@@ -50,46 +49,49 @@ const mockProjects = Array.from({ length: 5 }).map((_, i) => ({
   updatedAt: `2025-05-2${i}`,
 }));
 
-
 const AccountCenter: FC = () => {
   const [responsive, setResponsive] = useState(false);
   return (
     <PageContainer>
-   
-        {/* 统计数字 */}
-        <ProCard>
-          <RcResizeObserver
-            key="resize-observer"
-            onResize={(offset) => {
-                setResponsive(offset.width < 296);
-            }}
-            >
-            <ProCard.Group direction={responsive ? 'column' : 'row'}>
-                <ProCard bodyStyle={{ padding: 0 , textAlign: 'center'}}>
-                <Statistic title="笔记数" value={79} />
-                </ProCard>
-                <Divider type={responsive ? 'horizontal' : 'vertical'} />
-                <ProCard bodyStyle={{ padding: 0 , textAlign: 'center'}}>
-                <Statistic title="帖子数" value={11} />
-                </ProCard>
-                <Divider type={responsive ? 'horizontal' : 'vertical'} />
-                <ProCard bodyStyle={{ padding: 0 , textAlign: 'center'}}>
-                <Statistic title="浏览量" value={93} />
-                </ProCard>
-                <Divider type={responsive ? 'horizontal' : 'vertical'} />
-                <ProCard bodyStyle={{ padding: 0 , textAlign: 'center'}}>
-                <Statistic title="点赞数" value={112} />
-                </ProCard>
-            </ProCard.Group>
-            </RcResizeObserver>
-        </ProCard>
- 
+      {/* 统计数字 */}
+      <ProCard>
+        <RcResizeObserver
+          key="resize-observer"
+          onResize={(offset) => {
+            setResponsive(offset.width < 296);
+          }}
+        >
+          <ProCard.Group direction={responsive ? 'column' : 'row'}>
+            <ProCard bodyStyle={{ padding: 0, textAlign: 'center' }}>
+              <Statistic title="笔记数" value={79} />
+            </ProCard>
+            <Divider type={responsive ? 'horizontal' : 'vertical'} />
+            <ProCard bodyStyle={{ padding: 0, textAlign: 'center' }}>
+              <Statistic title="帖子数" value={11} />
+            </ProCard>
+            <Divider type={responsive ? 'horizontal' : 'vertical'} />
+            <ProCard bodyStyle={{ padding: 0, textAlign: 'center' }}>
+              <Statistic title="浏览量" value={93} />
+            </ProCard>
+            <Divider type={responsive ? 'horizontal' : 'vertical'} />
+            <ProCard bodyStyle={{ padding: 0, textAlign: 'center' }}>
+              <Statistic title="点赞数" value={112} />
+            </ProCard>
+          </ProCard.Group>
+        </RcResizeObserver>
+      </ProCard>
 
       <ProCard style={{ marginTop: 16 }}>
         {/* Tab 切换：动态、文章、项目、应用 */}
         <Tabs defaultActiveKey="1">
           <TabPane tab="动态" key="1">
-            <ProList<{ id: number; title: string; start: string; updatedAt: string; description: string }>
+            <ProList<{
+              id: number;
+              title: string;
+              start: string;
+              updatedAt: string;
+              description: string;
+            }>
               rowKey="id"
               dataSource={mockActivities}
               metas={{
@@ -120,15 +122,25 @@ const AccountCenter: FC = () => {
           </TabPane>
 
           <TabPane tab="我的笔记" key="2">
-            <ProList<{ id: number; title: string; href: string; description: string; updatedAt: string }>
+            <ProList<{
+              id: number;
+              title: string;
+              href: string;
+              description: string;
+              updatedAt: string;
+            }>
               rowKey="id"
-
               dataSource={mockArticles}
               metas={{
                 title: {
                   dataIndex: 'title',
                   render: (dom, entity) => (
-                    <a href={entity.href} target="_blank" rel="noreferrer" style={{ fontWeight: 500 }}>
+                    <a
+                      href={entity.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      style={{ fontWeight: 500 }}
+                    >
                       {entity.title}
                     </a>
                   ),
@@ -147,14 +159,25 @@ const AccountCenter: FC = () => {
           </TabPane>
 
           <TabPane tab="我的帖子" key="3">
-            <ProList<{ id: number; title: string; href: string; description: string; updatedAt: string }>
+            <ProList<{
+              id: number;
+              title: string;
+              href: string;
+              description: string;
+              updatedAt: string;
+            }>
               rowKey="id"
               dataSource={mockProjects}
               metas={{
                 title: {
                   dataIndex: 'title',
                   render: (dom, entity) => (
-                    <a href={entity.href} target="_blank" rel="noreferrer" style={{ fontWeight: 500 }}>
+                    <a
+                      href={entity.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      style={{ fontWeight: 500 }}
+                    >
                       {entity.title}
                     </a>
                   ),
