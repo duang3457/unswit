@@ -40,6 +40,19 @@ declare namespace API {
     content: string; // 帖子内容
   };
 
+  type CreateCommentParams = {
+    blogId: number; // 帖子ID
+    content: string; // 评论内容
+    parentId?: number; // 父评论ID（回复评论时使用）
+  };
+
+  type CommentResponse = {
+    success: boolean;
+    errorMsg: string;
+    data: any; // 评论数据
+    total: number;
+  };
+
   type BlogList = {
     blogSumList: BlogSummary[];
     total: number; // 总数
