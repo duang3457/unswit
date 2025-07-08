@@ -1,7 +1,7 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { ModalForm, ProForm, ProFormSelect, ProFormText } from '@ant-design/pro-components';
 import { Button, Form, message } from 'antd';
-import { addNote } from '@/services/ant-design-pro/api';
+import { addNote as apiAddNote } from '@/services/ant-design-pro/apis/noteApi';
 
 interface AddNoteProps {
   userId?: string; // 如果 userId 可能 undefined，可以加问号
@@ -31,7 +31,7 @@ const AddNote: React.FC<AddNoteProps> = ({ userId }) => {
       onFinish={async (note) => {
         try {
           // 调用后端接口，body 中携带表单值
-          await addNote({
+          await apiAddNote({
             data: {
               note, // 包含表单中所有字段
               userId: userId, // 传入用户 ID

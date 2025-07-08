@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { history } from 'umi';
 import { PLANET_LINK, SYSTEM_LOGO } from '@/constants';
 import Footer from '@/components/Footer';
-import { register } from '@/services/ant-design-pro/api';
+import { register } from '@/services/ant-design-pro/api_old';
 import styles from './index.less';
 import { LoginForm, ProFormText } from '@ant-design/pro-form';
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card } from 'antd';
 import styled from 'styled-components';
-import ForumLikeButton from './LikeButton';
+import ForumLikeButton from './LikeButton/LikeButtonPrev';
 
 const ImageContainer = styled.div`
   margin: 16px 0;
@@ -20,35 +20,35 @@ const CommentCountLabel = styled.strong`
   margin-left: 16px;
 `;
 
-const PostContent: React.FC<{ blog: API.Blog }> = ({ blog }) => {
+const PostContent: React.FC<{ post: API.Post }> = ({ post }) => {
   return (
     <Card>
       <p>
         <strong>作者：</strong>
-        {blog.authorName}
+        {post.authorName}
       </p>
       <p>
         <strong>创建时间：</strong>
-        {new Date(blog.createTime).toLocaleString()}
+        {new Date(post.createTime).toLocaleString()}
       </p>
       <p>
         <strong>最后更新时间：</strong>
-        {new Date(blog.updateTime).toLocaleString()}
+        {new Date(post.updateTime).toLocaleString()}
       </p>
       <p>
-        <ForumLikeButton postId={blog.id} initialCount={blog.likeCount || 0} />
+        <ForumLikeButton postId={post.id} initialCount={post.likeCount || 0} />
         <CommentCountLabel>评论数：</CommentCountLabel>
-        {blog.commentCount}
+        {post.commentCount}
       </p>
-      {blog.images && blog.images.length > 0 && (
+      {post.images && post.images.length > 0 && (
         <ImageContainer>
-          {blog.images.map((url) => (
+          {post.images.map((url) => (
             <PostImage key={url} src={url} alt="帖子图片" />
           ))}
         </ImageContainer>
       )}
       <hr />
-      <ContentContainer>{blog.content}</ContentContainer>
+      <ContentContainer>{post.content}</ContentContainer>
     </Card>
   );
 };

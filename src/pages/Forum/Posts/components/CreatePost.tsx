@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Modal, Form, Input, message } from 'antd';
-import { createPost as apiCreatePost } from '@/services/ant-design-pro/api';
+import { createPost as apiCreatePost } from '@/services/ant-design-pro/apis/postApi';
 import styled from 'styled-components';
 
 const StyledButton = styled(Button)`

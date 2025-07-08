@@ -5,7 +5,7 @@ import CourseCard from '@/pages/Notes/components/CourseCard';
 import { useModel } from 'umi';
 import { ProCard } from '@ant-design/pro-components';
 import AddNote from './components/addNote';
-import { fetchNoteLikes, currentNotes } from '@/services/ant-design-pro/api';
+import { fetchNoteLikes, currentNotes } from '@/services/ant-design-pro/api_old';
 
 import React, { useEffect, useState, useMemo } from 'react';
 

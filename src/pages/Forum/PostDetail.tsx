@@ -3,7 +3,10 @@ import { useParams, history } from 'umi';
 import { PageContainer } from '@ant-design/pro-components';
 import { message, Spin } from 'antd';
 import styled from 'styled-components';
-import { fetchPostDetail, createComment } from '@/services/ant-design-pro/api';
+import {
+  fetchPostDetail as apiFetchPostDetail,
+  createComment as apiCreateComment,
+} from '@/services/ant-design-pro/apis/postApi';
 import PostContent from './Posts/components/PostContent';
 import CommentList from './Comments/CommentList';
 import CommentEditor from './Comments/CommentEditor';
@@ -23,7 +26,7 @@ const ContentWrapper = styled.div`
 const PostDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const postId = Number(id);
-  const [data, setData] = useState<API.BlogComment | null>(null);
+  const [data, setData] = useState<API.PostComment | null>(null);
   const [loading, setLoading] = useState(false);
   const [commentLoading, setCommentLoading] = useState(false);
   const [commentContent, setCommentContent] = useState('');
@@ -31,8 +34,8 @@ const PostDetailPage: React.FC = () => {
 
   const loadPostDetail = () => {
     setLoading(true);
-    fetchPostDetail(postId)
-      .then((res: API.BlogComment) => {
+    apiFetchPostDetail(postId)
+      .then((res: API.PostComment) => {
         setData(res);
       })
       .catch(() => {
@@ -55,8 +58,8 @@ const PostDetailPage: React.FC = () => {
     }
     setCommentLoading(true);
     try {
-      const response = await createComment({
-        blogId: postId,
+      const response = await apiCreateComment({
+        postId: postId,
         content: commentContent.trim(),
       });
       if (response.success) {
@@ -106,18 +109,18 @@ const PostDetailPage: React.FC = () => {
     );
   }
 
-  const { blog, comments } = data;
+  const { post, comments } = data;
 
   return (
     <PageContainer
       header={{
-        title: blog.title,
+        title: post.title,
         breadcrumb: {},
         onBack: () => history.goBack(),
       }}
     >
       <ContentWrapper>
-        <PostContent blog={blog} />
+        <PostContent post={post} />
         <CommentList comments={comments} />
         <CommentEditor
           value={commentContent}
