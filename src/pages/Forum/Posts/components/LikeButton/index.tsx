@@ -6,17 +6,17 @@ import { HeartOutlined, HeartFilled } from '@ant-design/icons';
 import { togglePostLike as apiTogglePostLike } from '@/services/ant-design-pro/apis/postApi';
 
 export interface LikeButtonProps {
-  userId: string;
   postId: number;
   initialCount: number;
   initialLiked?: boolean;
+  onChange?: (postId: number, liked: boolean, count: number) => void;
 }
 
 const ForumLikeButton: React.FC<LikeButtonProps> = ({
-  userId,
   postId,
   initialCount,
   initialLiked = false,
+  onChange,
 }) => {
   const [count, setCount] = useState<number>(initialCount);
   const [liked, setLiked] = useState<boolean>(initialLiked);
@@ -31,16 +31,18 @@ const ForumLikeButton: React.FC<LikeButtonProps> = ({
 
   const onToggle = async (e: React.MouseEvent) => {
     e.stopPropagation(); // 阻止父容器点击
-    // 乐观更新
+    // 乐观更新,假设点赞操作成功，提前更新状态
+    // 如果失败则回滚
     const prevLiked = liked;
     const prevCount = count;
     setLiked(!prevLiked);
     setCount(prevLiked ? prevCount - 1 : prevCount + 1);
 
     try {
-      const { liked: newLiked, likes: newCount } = await apiTogglePostLike(postId, userId);
+      const { liked: newLiked, likes: newCount } = await apiTogglePostLike(postId);
       setLiked(newLiked);
       setCount(newCount);
+      onChange?.(postId, newLiked, newCount); // ← 把最新状态通知给父组件
       message.success(newLiked ? '点赞成功' : '取消点赞成功');
     } catch {
       // 回滚

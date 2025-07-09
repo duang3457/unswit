@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useParams, history } from 'umi';
+import { useLocation, useParams, history } from 'umi';
 import { PageContainer } from '@ant-design/pro-components';
 import { message, Spin } from 'antd';
 import styled from 'styled-components';
@@ -24,6 +24,12 @@ const ContentWrapper = styled.div`
 `;
 
 const PostDetailPage: React.FC = () => {
+  // 1. 拿到 search 字符串
+  const { search } = useLocation();
+  // 2. 用 URLSearchParams 解析
+  const params = new URLSearchParams(search);
+  const liked = params.get('liked') === '1';
+
   const { id } = useParams<{ id: string }>();
   const postId = Number(id);
   const [data, setData] = useState<API.PostComment | null>(null);
@@ -120,7 +126,7 @@ const PostDetailPage: React.FC = () => {
       }}
     >
       <ContentWrapper>
-        <PostContent post={post} />
+        <PostContent post={post} liked={liked} />
         <CommentList comments={comments} />
         <CommentEditor
           value={commentContent}

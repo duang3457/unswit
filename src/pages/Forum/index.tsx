@@ -193,8 +193,11 @@ const ForumPage: React.FC = () => {
     });
   };
 
-  const handlePostClick = (postId: number) => {
-    history.push(`/forum/${postId}`);
+  const handlePostClick = (postId: number, liked: boolean) => {
+    history.push({
+      pathname: `/forum/${postId}`,
+      query: { liked: liked ? '1' : '0' }, // 使用query参数传递点赞状态
+    });
   };
 
   return (
@@ -208,7 +211,11 @@ const ForumPage: React.FC = () => {
             <SectionContainer>
               <SectionTitle level={4}>🔥 热门帖子</SectionTitle>
               {hotPosts.map((post, index) => (
-                <HotPostCard key={post.id} size="small" onClick={() => handlePostClick(post.id)}>
+                <HotPostCard
+                  key={post.id}
+                  size="small"
+                  onClick={() => handlePostClick(post.id, initialLiked[post.id])}
+                >
                   <div>
                     <Typography.Text strong>
                       {index + 1}. {post.title}
@@ -226,7 +233,11 @@ const ForumPage: React.FC = () => {
             <SectionContainer>
               <SectionTitle level={4}>⭐ 最新帖子</SectionTitle>
               {latestPosts.map((post) => (
-                <HotPostCard key={post.id} size="small" onClick={() => handlePostClick(post.id)}>
+                <HotPostCard
+                  key={post.id}
+                  size="small"
+                  onClick={() => handlePostClick(post.id, initialLiked[post.id])}
+                >
                   <div>
                     <Typography.Text strong>{post.title}</Typography.Text>
                     <PostMeta>
@@ -253,14 +264,19 @@ const ForumPage: React.FC = () => {
                   title={item.title}
                   extra={`${item.author} 发布于 ${formatted}`}
                   hoverable
-                  onClick={() => handlePostClick(item.id)}
+                  onClick={() => handlePostClick(item.id, initialLiked[item.id])}
                 >
                   <p>{item.content}</p>
                   <ForumLikeButton
-                    userId={userId || ''}
+                    key={item.id}
                     postId={item.id}
-                    initialCount={initialLikes[item.id] || 0}
+                    initialCount={initialLikes[item.id]}
                     initialLiked={initialLiked[item.id]}
+                    onChange={(id, liked, count) => {
+                      // 只改这个 post 的 liked/count，别全量重拉
+                      setInitialLiked((prev) => ({ ...prev, [id]: liked }));
+                      setInitialLikes((prev) => ({ ...prev, [id]: count }));
+                    }}
                   />
                 </Card>
               </List.Item>

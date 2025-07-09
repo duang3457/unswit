@@ -12,17 +12,13 @@ export async function fetchPostLikes(options?: { [key: string]: any }) {
 }
 
 /** 切换点赞 POST /api/posts/like */
-export async function togglePostLike(
-  postId: number,
-  userId: string,
-  options?: { [key: string]: any },
-) {
+export async function togglePostLike(postId: number, options?: { [key: string]: any }) {
   return request<{ liked: boolean; likes: number }>('/api/posts/like', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    data: { postId, userId },
+    data: { postId },
     ...(options || {}),
   });
 }
