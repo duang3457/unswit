@@ -13,13 +13,11 @@ const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 const registerPath = '/user/register';
 const welcomePath = '/welcome';
-// const rootPath = '/';
-// const notesPath = '/notes';
-// const forumPath = '/forum';
+const rootPath = '/';
 /**
  * 无需用户登录态的页面
  */
-const NO_NEED_LOGIN_WHITE_LIST = [registerPath, welcomePath, loginPath];
+const NO_NEED_LOGIN_WHITE_LIST = [registerPath, loginPath];
 
 /** 获取用户信息比较慢的时候会展示一个 loading */
 export const initialStateConfig = {
@@ -38,13 +36,18 @@ export async function getInitialState(): Promise<{
 }> {
   const fetchUserInfo = async () => {
     try {
+      console.log('fetchUserInfo');
       return await queryCurrentUser();
     } catch (error) {
-      history.push(loginPath);
+      console.error(error);
+
+      if (history.location.pathname !== welcomePath && history.location.pathname !== rootPath) {
+        history.push(loginPath);
+      }
     }
     return undefined;
   };
-  // 如果是无需登录的页面，不执行
+  // 如果是无需登录的页面(login, register)，直接返回,不需要fetch
   if (NO_NEED_LOGIN_WHITE_LIST.includes(history.location.pathname)) {
     return {
       // @ts-ignore
@@ -53,6 +56,7 @@ export async function getInitialState(): Promise<{
     };
   }
   const currentUser = await fetchUserInfo();
+  console.log('currentUser', currentUser);
   return {
     // @ts-ignore
     fetchUserInfo,
@@ -78,7 +82,9 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       }
       // 如果没有登录，重定向到 login
       if (!initialState?.currentUser) {
-        history.push(loginPath);
+        if (history.location.pathname !== welcomePath && history.location.pathname !== rootPath) {
+          history.push(loginPath);
+        }
       }
     },
 

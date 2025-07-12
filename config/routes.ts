@@ -1,38 +1,41 @@
-﻿
+﻿import access from '@/access';
+
 export default [
   {
     path: '/user',
-    layout: false,
+    // layout: false,
     routes: [
       {
-        path: '/user', routes: [
-          {name: '登录', path: '/user/login', component: './user/Login'},
-          {name: '注册', path: '/user/register', component: './user/Register'}
-        ]
+        path: '/user',
+        routes: [
+          { name: '登录', path: '/user/login', component: './user/Login' },
+          { name: '注册', path: '/user/register', component: './user/Register' },
+        ],
       },
-      {component: './404'},
+      { component: './404' },
     ],
   },
 
   {
-    path:"/nullLink",
+    path: '/nullLink',
     layout: false,
     component: './nullLink',
-    routes: [{path: "/nullLink"}]
+    routes: [{ path: '/nullLink' }],
   },
 
   {
-    path: '/welcome', 
-    name: '欢迎页', 
-    icon: 'smile', 
-    component: './Welcome'
+    path: '/welcome',
+    name: '欢迎页',
+    // access: 'canGuest',
+    icon: 'smile',
+    component: './Welcome',
   },
 
   {
     path: '/notes',
     name: 'unswit课程笔记',
     icon: 'book',
-    component: './Notes'
+    component: './Notes',
   },
 
   {
@@ -40,17 +43,17 @@ export default [
     name: '论坛',
     icon: 'comment',
     routes: [
-    {
-      path: '/forum',
-      component: './Forum',
-    },
-    {
-      path: '/forum/:id',
-      component: './Forum/PostDetail',
-      name: '帖子详情',
-      hideInMenu: true,
-    },
-  ],
+      {
+        path: '/forum',
+        component: './Forum',
+      },
+      {
+        path: '/forum/:id',
+        component: './Forum/PostDetail',
+        name: '帖子详情',
+        hideInMenu: true,
+      },
+    ],
   },
 
   {
@@ -59,13 +62,20 @@ export default [
     access: 'canAdmin',
     component: './Admin',
     routes: [
-      {path: '/admin/user-manage', name: '用户管理', icon: 'smile', component: './Admin/UserManage'},
-      {component: './404'},
+      {
+        path: '/admin/user-manage',
+        name: '用户管理',
+        icon: 'smile',
+        component: './Admin/UserManage',
+      },
+      { component: './404' },
     ],
   },
 
-  { path: '/', 
-    redirect: '/welcome'
+  {
+    path: '/',
+    // access: 'canGuest',
+    redirect: '/welcome',
   },
 
   {
@@ -81,8 +91,8 @@ export default [
         name: '个人设置',
         component: './Account/Settings',
       },
-    ]
+    ],
   },
-  
-  {component: './404'},
+
+  { component: './404' },
 ];

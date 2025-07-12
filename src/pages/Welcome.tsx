@@ -6,18 +6,11 @@ import { ProCard } from '@ant-design/pro-components';
 
 import React from 'react';
 
-// const CodePreview: React.FC = ({ children }) => (
-//   <pre className={styles.pre}>
-//     <code>
-//       <Typography.Text copyable>{children}</Typography.Text>
-//     </code>
-//   </pre>
-// );
-
 const Welcome: React.FC = () => {
   const { initialState } = useModel('@@initialState');
+  const currentUser = initialState?.currentUser;
 
-  const userName = initialState?.currentUser?.userName;
+  const userName = currentUser?.userName;
 
   return (
     <PageContainer>
@@ -50,7 +43,7 @@ const Welcome: React.FC = () => {
           style={{
             marginBottom: 12,
           }}
-         />
+        />
       </Card>
     </PageContainer>
   );

@@ -117,6 +117,7 @@ declare namespace API {
     userStatus: number;
     userRole: number;
     createTime: Date;
+    unreadCount?: number; // 未读消息数量 后端还未定义
   };
 
   type LoginResult = {

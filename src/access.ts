@@ -5,5 +5,6 @@ export default function access(initialState: { currentUser?: API.CurrentUser | u
   const { currentUser } = initialState || {};
   return {
     canAdmin: currentUser && currentUser.userRole === 1,
+    canGuest: true, // 允许所有人访问
   };
 }
