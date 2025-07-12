@@ -154,7 +154,7 @@ export async function createComment(
       'Content-Type': 'application/json',
     },
     data: {
-      blogId: body.blogId,
+      blogId: body.postId,
       parentId: body.parentId || 0,
       content: body.content,
     },
