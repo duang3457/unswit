@@ -41,7 +41,7 @@ declare namespace API {
   };
 
   type CreateCommentParams = {
-    blogId: number; // 帖子ID
+    postId: number; // 帖子ID
     content: string; // 评论内容
     parentId?: number; // 父评论ID（回复评论时使用）
   };
