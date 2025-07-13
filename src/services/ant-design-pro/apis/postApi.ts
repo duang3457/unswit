@@ -74,7 +74,7 @@ export async function createComment(
     },
     data: {
       postId: body.postId,
-      parentId: body.parentId || 0,
+      parentId: body.parentId || null,
       content: body.content,
     },
     ...(options || {}),

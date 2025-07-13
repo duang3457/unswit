@@ -1,11 +1,11 @@
-import { LockOutlined, SoundTwoTone, UserOutlined } from '@ant-design/icons';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Alert, Divider, message, Space, Tabs } from 'antd';
 import React, { useState } from 'react';
 import { ProFormCheckbox, ProFormText, LoginForm } from '@ant-design/pro-form';
 import { history, useModel } from 'umi';
 import { PLANET_LINK, SYSTEM_LOGO } from '@/constants';
 import Footer from '@/components/Footer';
-import { login } from '@/services/ant-design-pro/api_old';
+import { login as apiLogin } from '@/services/ant-design-pro/apis/userApi';
 import styles from './index.less';
 import { Link } from '@umijs/preset-dumi/lib/theme';
 
@@ -43,7 +43,7 @@ const Login: React.FC = () => {
     try {
       // 有全局响应拦截器（位于plugins/globalRequest.ts），所以不需要在这里处理错误
       // 成功返回：API.BaseResponse.data(即user = API.CurrentUser)，隐藏掉了code,message,description部分
-      const response = await login({ ...values, type });
+      const response = await apiLogin({ ...values, type });
 
       if (response) {
         const defaultLoginSuccessMessage = '登录成功！';
@@ -148,7 +148,7 @@ const Login: React.FC = () => {
                 target="_blank"
                 rel="noreferrer"
               >
-                忘记密码请联系Yang
+                忘记密码请联系我们
               </a>
             </Space>
           </div>

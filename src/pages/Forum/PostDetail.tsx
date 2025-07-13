@@ -68,12 +68,12 @@ const PostDetailPage: React.FC = () => {
         postId: postId,
         content: commentContent.trim(),
       });
-      if (response.success) {
+      if (response) {
         message.success('评论发布成功！');
         setCommentContent('');
-        loadPostDetail();
+        await loadPostDetail();
       } else {
-        message.error(response.errorMsg || '发布评论失败，请稍后重试');
+        message.error('发布评论失败，请稍后重试');
       }
     } catch (error) {
       console.error('发布评论失败，请稍后重试', error);

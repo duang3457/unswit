@@ -1,7 +1,7 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable, { TableDropdown } from '@ant-design/pro-table';
-import { searchUsers } from '@/services/ant-design-pro/api_old';
+import { searchUsers } from '@/services/ant-design-pro/apis/userApi'; // Adjust the import path as necessary
 import { Image } from 'antd';
 
 const columns: ProColumns<API.CurrentUser>[] = [

@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { history } from 'umi';
 import { PLANET_LINK, SYSTEM_LOGO } from '@/constants';
 import Footer from '@/components/Footer';
-import { register } from '@/services/ant-design-pro/api_old';
+import { register as apiRegister } from '@/services/ant-design-pro/apis/userApi';
 import styles from './index.less';
 import { LoginForm, ProFormText } from '@ant-design/pro-form';
 
@@ -22,7 +22,7 @@ const Register: React.FC = () => {
 
     try {
       // 注册
-      const id = await register(values);
+      const id = await apiRegister(values);
       console.log('注册成功，返回的ID:', id);
       if (id) {
         const defaultLoginSuccessMessage = '注册成功！';

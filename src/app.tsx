@@ -1,10 +1,10 @@
 import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
-import { PageLoading, SettingDrawer } from '@ant-design/pro-layout';
+import { PageLoading } from '@ant-design/pro-layout';
 import type { RunTimeLayoutConfig } from 'umi';
-import { history, Link } from 'umi';
+import { history } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
-import { currentUser as queryCurrentUser } from './services/ant-design-pro/api_old';
+import { currentUser as queryCurrentUser } from './services/ant-design-pro/apis/userApi';
 // import { BookOutlined, LinkOutlined } from '@ant-design/icons';
 import defaultSettings from '../config/defaultSettings';
 import type { RequestConfig } from '@@/plugin-request/request';
