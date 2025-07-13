@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-components';
-import { Card, List, Pagination, message, Row, Col, Typography } from 'antd';
+import { Card, List, Alert, Pagination, message, Row, Col, Typography } from 'antd';
 import { history, useModel } from 'umi';
 import styled from 'styled-components';
 import {
@@ -9,6 +9,7 @@ import {
 } from '@/services/ant-design-pro/apis/postApi';
 import CreatePost from './Posts/components/CreatePost';
 import ForumLikeButton from './Posts/components/LikeButton/index';
+import Marquee from 'react-fast-marquee';
 
 const StyledPagination = styled(Pagination)`
   margin-top: 16px;
@@ -201,12 +202,20 @@ const ForumPage: React.FC = () => {
   };
 
   return (
-    <CenteredContainer>
-      <PageContainer>
-        <CreatePost onSuccess={handlePostCreated} />
-
+    <CenteredContainer style={{ padding: 0 }}>
+      <PageContainer childrenContentStyle={{ padding: 8, marginTop: 8 }}>
+        <Alert
+          banner
+          type="success"
+          // closable
+          message={
+            <Marquee pauseOnHover gradient={false}>
+              {`这里是UNSWIT论坛!`}
+            </Marquee>
+          }
+        />
         {/* 热门和最新帖子区域 */}
-        <Row gutter={16} style={{ marginBottom: 24 }}>
+        <Row gutter={16} style={{ marginBottom: 12, marginTop: 12 }}>
           <Col xs={24} sm={12}>
             <SectionContainer>
               <SectionTitle level={4}>🔥 热门帖子</SectionTitle>
@@ -249,6 +258,8 @@ const ForumPage: React.FC = () => {
             </SectionContainer>
           </Col>
         </Row>
+
+        <CreatePost onSuccess={handlePostCreated} />
 
         {/* 原有的帖子列表 */}
         <List

@@ -1,4 +1,4 @@
-import { PageContainer } from '@ant-design/pro-layout';
+import { PageContainer } from '@ant-design/pro-components';
 import { Card, Alert, Typography, message, Empty, Button } from 'antd';
 import { ReloadOutlined, FireTwoTone, ClockCircleTwoTone } from '@ant-design/icons';
 import CourseCard from '@/pages/Notes/components/CourseCard';
@@ -8,6 +8,18 @@ import AddNote from './components/addNote';
 import { fetchNoteLikes, currentNotes } from '@/services/ant-design-pro/apis/noteApi';
 
 import React, { useEffect, useState, useMemo } from 'react';
+import styled from 'styled-components';
+import Marquee from 'react-fast-marquee';
+
+// 弹性布局容器
+const ListContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+`;
 
 const Notes: React.FC = () => {
   const { initialState } = useModel('@@initialState');
@@ -99,37 +111,26 @@ const Notes: React.FC = () => {
   const orderedCategoryCourses = Object.values(categoryCourses);
 
   return (
-    <PageContainer>
-      <Card>
+    <PageContainer childrenContentStyle={{ padding: 0 }}>
+      <Card bodyStyle={{ padding: 12 }}>
         <Alert
-          message={`${userName + '同学' || '同学'}，这里是课程笔记导航栏!`}
-          description={
-            <div>
-              俗话说得好：好记性不如烂笔头。一个好的学习方式是将自己在课上的输入，尝试在笔记中输出出来。
-              同时，我们希望能够做出一个友好的学习圈子：因为今日你的笔记，就是明日他人的宝藏。
-              虽然我们身处在不同的地方/教室/图书馆，但是我们的笔记可以将我们联系起来，
-              从此，空阔的教室将不再只有你一个人，我们在学习路上将不再孤独，我们的留学生活要更加充实。
-              <br />
-              最后，让我们在笔下相遇，互相学习，共同进步。 Power! （口拙舌笨，词不达意，敬请谅解）
-            </div>
-          }
-          type="success" // success,info,warning,error
-          showIcon
           banner
-          closable
-          style={{
-            margin: -12,
-            marginBottom: 24,
-          }}
+          type="success"
+          // closable
+          message={
+            <Marquee pauseOnHover gradient={false}>
+              {`${userName + '同学' || '同学'}，这里是课程笔记导航栏!`}
+            </Marquee>
+          }
         />
 
-        <div style={{ display: 'flex', gap: 24, marginBottom: 12 }}>
+        <ListContainer style={{ marginTop: 12 }}>
           {/* 最热笔记列表 */}
           <ProCard
             title="最热笔记"
             bordered
             bodyStyle={{ padding: 2 }}
-            style={{ marginBottom: 24 }}
+            style={{ marginBottom: 12, flex: 1 }}
           >
             {hottestNotes.length > 0 ? (
               hottestNotes.map((note) => (
@@ -182,7 +183,7 @@ const Notes: React.FC = () => {
             title="最新笔记"
             bordered
             bodyStyle={{ padding: 2 }}
-            style={{ marginBottom: 24 }}
+            style={{ marginBottom: 12, flex: 1 }}
           >
             {latestNotes.length > 0 ? (
               latestNotes.map((note) => (
@@ -234,7 +235,7 @@ const Notes: React.FC = () => {
               <Empty description="暂无最新笔记" />
             )}
           </ProCard>
-        </div>
+        </ListContainer>
 
         {/* 顶部：已标记的课程 */}
         <ProCard
@@ -250,7 +251,8 @@ const Notes: React.FC = () => {
               点击刷新
             </Button>
           }
-          style={{ marginBottom: 24 }}
+          style={{ marginBottom: 12 }}
+          bodyStyle={{ padding: 4 }}
         >
           {pinnedCourses.length > 0 ? (
             pinnedCourses.map((course) => (
@@ -288,6 +290,7 @@ const Notes: React.FC = () => {
               extra={<AddNote userId={userId} />}
               tooltip={category.toolTip}
               subTitle={category.subTitle}
+              bodyStyle={{ padding: 4 }}
             >
               {(category.courseNotes || []).map((course) => (
                 <ProCard colSpan={{ xs: 24, sm: 24, md: 12, lg: 12 }} bodyStyle={{ padding: 0 }}>

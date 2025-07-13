@@ -47,7 +47,7 @@ const CommentEditor: React.FC<CommentEditorProps> = ({
           placeholder="写下你的评论..."
           value={value}
           onChange={onChange}
-          maxLength={500}
+          maxLength={300}
           showCount
         />
       </StyledFormItem>

@@ -4,16 +4,13 @@ import { Button, Form, message } from 'antd';
 import { addNote as apiAddNote } from '@/services/ant-design-pro/apis/noteApi';
 
 interface AddNoteProps {
-  userId?: string; // 如果 userId 可能 undefined，可以加问号
+  userId?: string;
 }
 
 const AddNote: React.FC<AddNoteProps> = ({ userId }) => {
-  const [form] = Form.useForm<{ name: string; company: string }>();
+  const [form] = Form.useForm();
   return (
-    <ModalForm<{
-      name: string;
-      company: string;
-    }>
+    <ModalForm
       title="新建笔记(更新和删除笔记在个人中心)"
       trigger={
         <Button type="primary">

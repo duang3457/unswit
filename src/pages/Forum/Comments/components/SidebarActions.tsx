@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Button } from 'antd';
 import styled from 'styled-components';
+import { CaretUpFilled, CaretDownFilled } from '@ant-design/icons';
 
 const Sidebar = styled.div<{ right: number; bottom: number }>`
   position: fixed;
@@ -83,10 +84,10 @@ const SidebarActions: React.FC<SidebarActionsProps> = ({ onScrollToTop, onScroll
       title="拖动移动按钮"
     >
       <SidebarButton type="primary" shape="circle" onClick={onScrollToTop} title="返回顶部">
-        ↑
+        <CaretUpFilled />
       </SidebarButton>
-      <SidebarButton type="default" shape="circle" onClick={onScrollToComment} title="发表评论">
-        💬
+      <SidebarButton type="primary" shape="circle" onClick={onScrollToComment} title="发表评论">
+        <CaretDownFilled />
       </SidebarButton>
     </Sidebar>
   );
