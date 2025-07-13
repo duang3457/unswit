@@ -8,8 +8,9 @@ import { currentUser as queryCurrentUser } from './services/ant-design-pro/apis/
 // import { BookOutlined, LinkOutlined } from '@ant-design/icons';
 import defaultSettings from '../config/defaultSettings';
 import type { RequestConfig } from '@@/plugin-request/request';
+import 'antd/dist/antd.css';
 
-const isDev = process.env.NODE_ENV === 'development';
+// const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 const registerPath = '/user/register';
 const welcomePath = '/welcome';

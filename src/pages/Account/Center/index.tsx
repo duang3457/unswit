@@ -3,7 +3,7 @@ import React from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Row, Col, Avatar, Statistic, Tabs, Space, Tag } from 'antd';
 import ProCard from '@ant-design/pro-card';
-import ProList, { ProListMetas } from '@ant-design/pro-list';
+import ProList, { ProListMetas } from '@ant-design/pro-components';
 import type { FC } from 'react';
 const { Divider } = ProCard;
 
