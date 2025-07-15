@@ -52,3 +52,35 @@ export async function searchUsers(options?: { [key: string]: any }) {
     ...(options || {}),
   });
 }
+
+/** 更新用户基本信息 PUT /api/user/basic */
+export async function updateUserBasicInfo(
+  body: API.UserUpdateInfo,
+  options?: { [key: string]: any },
+) {
+  return request<API.CurrentUser>('/api/user/basic', {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    credentials: 'include',
+    ...(options || {}),
+  });
+}
+
+/** 修改用户密码 POST /api/user/password */
+export async function changeUserPassword(
+  body: { oldPassword: string; newPassword: string },
+  options?: { [key: string]: any },
+) {
+  return request<string>('/api/user/password', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    credentials: 'include',
+    ...(options || {}),
+  });
+}

@@ -38,4 +38,18 @@ declare namespace API {
     checkPassword?: string;
     type?: string;
   };
+
+  type UserUpdateInfo = {
+    userAccount: string;
+    userName?: string;
+    email?: string;
+    phoneCN?: string;
+    phoneAU?: string;
+  };
+
+  type UserNotification = {
+    emailNotify: boolean;
+    smsNotify: boolean;
+    pushNotify: boolean;
+  };
 }
