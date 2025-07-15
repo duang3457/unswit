@@ -10,7 +10,7 @@ declare namespace API {
 
   type Comment = {
     id: number; // 评论ID
-    authorId: number; // 评论作者ID
+    authorId: string; // 评论作者ID
     postId: number; // 评论所属帖子ID
     authorName: string; // 评论作者名称
     authorAvatar?: string; // 评论作者头像
@@ -22,6 +22,11 @@ declare namespace API {
     children?: Comment[]; // 回复列表（如果有）
     parentId?: number; // 父评论ID（如果是回复评论）
   };
+
+  interface CommentTree extends Comment {
+    /** 子评论列表（如果有） */
+    children: CommentTree[];
+  }
 
   type Post = {
     id: number;

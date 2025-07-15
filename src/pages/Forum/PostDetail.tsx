@@ -24,9 +24,7 @@ const ContentWrapper = styled.div`
 `;
 
 const PostDetailPage: React.FC = () => {
-  // 1. 拿到 search 字符串
   const { search } = useLocation();
-  // 2. 用 URLSearchParams 解析
   const params = new URLSearchParams(search);
   const liked = params.get('liked') === '1';
 
@@ -37,25 +35,32 @@ const PostDetailPage: React.FC = () => {
   const [commentLoading, setCommentLoading] = useState(false);
   const [commentContent, setCommentContent] = useState('');
   const commentAnchorRef = useRef<HTMLDivElement>(null);
+  // 回复相关状态
+  const [replyParentId, setReplyParentId] = useState<number | null>(null);
+  const [replyAuthorOneId, setReplyAuthorOneId] = useState<string | null>(null);
 
   const loadPostDetail = () => {
     setLoading(true);
     apiFetchPostDetail(postId)
-      .then((res: API.PostComment) => {
-        setData(res);
-      })
-      .catch(() => {
-        message.error('加载帖子失败，请稍后重试');
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+      .then((res) => setData(res))
+      .catch(() => message.error('加载帖子失败，请稍后重试'))
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => {
     loadPostDetail();
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postId]);
+
+  // 点击回复按钮
+  const handleReply = (parentId: number, authorId: string) => {
+    // 设置回复的目标评论ID和被回复作者ID
+    setReplyParentId(parentId);
+    setReplyAuthorOneId(authorId);
+    // 滚动到编辑框
+    commentAnchorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => document.querySelector('textarea')?.focus(), 300);
+  };
 
   const handleSubmitComment = async () => {
     if (!commentContent.trim()) {
@@ -64,47 +69,39 @@ const PostDetailPage: React.FC = () => {
     }
     setCommentLoading(true);
     try {
-      const response = await apiCreateComment({
-        postId: postId,
-        content: commentContent.trim(),
-      });
-      if (response) {
+      // 调用接口，传入 parentId 和 replyAuthorOneId
+      const payload: any = { postId, content: commentContent.trim() };
+      if (replyParentId != null) payload.parentId = replyParentId;
+      if (replyAuthorOneId) payload.replyAuthorOneId = replyAuthorOneId;
+      const ok = await apiCreateComment(payload);
+      if (ok) {
         message.success('评论发布成功！');
         setCommentContent('');
+        setReplyParentId(null);
+        setReplyAuthorOneId(null);
         await loadPostDetail();
-      } else {
-        message.error('发布评论失败，请稍后重试');
-      }
-    } catch (error) {
-      console.error('发布评论失败，请稍后重试', error);
+      } else message.error('发布评论失败，请稍后重试');
+    } catch {
+      message.error('发布评论失败，请稍后重试');
     } finally {
       setCommentLoading(false);
     }
   };
 
-  const handleScrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
+  const handleScrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
   const handleScrollToComment = () => {
-    if (commentAnchorRef.current) {
-      commentAnchorRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-    setTimeout(() => {
-      const textarea = document.querySelector('textarea');
-      if (textarea) textarea.focus();
-    }, 400);
+    commentAnchorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => document.querySelector('textarea')?.focus(), 400);
   };
 
-  if (loading) {
+  if (loading)
     return (
       <PageContainer>
         <Spin tip="加载中..." />
       </PageContainer>
     );
-  }
 
-  if (!data) {
+  if (!data)
     return (
       <PageContainer>
         <div style={{ padding: 24 }}>
@@ -113,21 +110,15 @@ const PostDetailPage: React.FC = () => {
         </div>
       </PageContainer>
     );
-  }
 
   const { post, comments } = data;
 
   return (
-    <PageContainer
-      header={{
-        title: post.title,
-        breadcrumb: {},
-        onBack: () => history.goBack(),
-      }}
-    >
+    <PageContainer header={{ title: post.title, breadcrumb: {}, onBack: () => history.goBack() }}>
       <ContentWrapper>
         <PostContent post={post} liked={liked} />
-        <CommentList comments={comments} />
+        {/* 直接渲染后端返回的评论树 */}
+        <CommentList comments={comments as API.CommentTree[]} onReply={handleReply} />
         <CommentEditor
           value={commentContent}
           loading={commentLoading}
