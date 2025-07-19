@@ -39,6 +39,10 @@ request.interceptors.response.use(async (response, options): Promise<any> => {
   if (res.code === 0) {
     return res.data;
   }
+  if (res.code === 1) {
+    message.success(res.description);
+    return res.data;
+  }
   if (res.code === 40100) {
     message.error('请先登录');
     history.replace({

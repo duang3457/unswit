@@ -5,9 +5,11 @@ import { addNote as apiAddNote } from '@/services/ant-design-pro/apis/noteApi';
 
 interface AddNoteProps {
   userId?: string;
+  // 添加成功后的回调
+  onSuccess?: () => void;
 }
 
-const AddNote: React.FC<AddNoteProps> = ({ userId }) => {
+const AddNote: React.FC<AddNoteProps> = ({ userId, onSuccess }) => {
   const [form] = Form.useForm();
   return (
     <ModalForm
@@ -28,12 +30,9 @@ const AddNote: React.FC<AddNoteProps> = ({ userId }) => {
       onFinish={async (note) => {
         try {
           // 调用后端接口，body 中携带表单值
-          await apiAddNote({
-            data: {
-              note, // 包含表单中所有字段
-              userId: userId, // 传入用户 ID
-            },
-          });
+          await apiAddNote({ data: { note, userId } });
+          // 调用添加成功回调
+          onSuccess?.();
           return true; // 返回 true 以关闭 ModalForm
         } catch (error) {
           console.error('添加笔记失败', error);

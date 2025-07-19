@@ -9,7 +9,8 @@ declare namespace API {
     userAccount: string;
     avatarUrl?: string;
     gender: number;
-    phone: string;
+    phoneCN: string;
+    phoneAU: string;
     email: string;
     userStatus: number;
     userRole: number;
@@ -52,4 +53,42 @@ declare namespace API {
     smsNotify: boolean;
     pushNotify: boolean;
   };
+
+  // 个人中心页面api
+  type UserStats = {
+    noteCount: number;
+    postCount: number;
+    noteLikeCount: number;
+    postLikeCount: number;
+  };
+
+  type PagedResult<T> = {
+    data: T[];
+    total: number;
+  }
+
+  type MyActivity = {
+    id: number;
+    title: string;
+    start: string;
+    updatedAt: string;
+    description: string;
+  }
+
+  type MyNote = {
+    id: number;
+    title: string;
+    href: string;
+    description: string;
+    updatedAt: string;
+  }
+
+  type MyPost = {
+    id: number;
+    title: string;
+    href: string;
+    description: string;
+    updatedAt: string;
+  }
+
 }

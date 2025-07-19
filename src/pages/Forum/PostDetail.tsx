@@ -52,12 +52,14 @@ const PostDetailPage: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postId]);
 
-  // 点击回复按钮
-  const handleReply = (parentId: number, authorId: string) => {
+  // 点击回复按钮，parentId: 一级评论ID，authorId: 被回复作者ID，authorName: 被回复用户名
+  const handleReply = (parentId: number, authorId: string, authorName: string) => {
     // 设置回复的目标评论ID和被回复作者ID
     setReplyParentId(parentId);
     setReplyAuthorOneId(authorId);
-    // 滚动到编辑框
+    // 输入框预置 @用户名
+    setCommentContent(`@${authorName} `);
+    // 滚动到编辑框并获取焦点
     commentAnchorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     setTimeout(() => document.querySelector('textarea')?.focus(), 300);
   };
@@ -114,11 +116,12 @@ const PostDetailPage: React.FC = () => {
   const { post, comments } = data;
 
   return (
-    <PageContainer header={{ title: post.title, breadcrumb: {}, onBack: () => history.goBack() }}>
+    <PageContainer childrenContentStyle={{ padding: 8, marginTop: 0 }} header={{ title: post.title, breadcrumb: {}, onBack: () => history.goBack() }}>
       <ContentWrapper>
         <PostContent post={post} liked={liked} />
-        {/* 直接渲染后端返回的评论树 */}
+        
         <CommentList comments={comments as API.CommentTree[]} onReply={handleReply} />
+        
         <CommentEditor
           value={commentContent}
           loading={commentLoading}

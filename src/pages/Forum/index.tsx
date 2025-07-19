@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-components';
-import { Card, List, Alert, Pagination, message, Row, Col, Typography } from 'antd';
+import { Card, List, Alert, Pagination, message, Row, Col, Typography, Space, Avatar } from 'antd';
 import { history, useModel } from 'umi';
 import styled from 'styled-components';
 import {
@@ -10,6 +10,7 @@ import {
 import CreatePost from './Posts/components/CreatePost';
 import ForumLikeButton from './Posts/components/LikeButton/index';
 import Marquee from 'react-fast-marquee';
+import { UserOutlined } from '@ant-design/icons';
 
 const StyledPagination = styled(Pagination)`
   margin-top: 16px;
@@ -55,49 +56,6 @@ const CenteredContainer = styled.div`
   box-sizing: border-box;
 `;
 
-// Mock数据 - 每个区域只显示2个
-const mockHotPosts: API.PostSummary[] = [
-  {
-    id: 999,
-    title: 'COMP3900项目经验分享 - 从零到部署完整指南',
-    content:
-      '分享我们团队在COMP3900项目中的开发经验，包括前后端架构设计、数据库优化、部署流程等...',
-    author: '学长小王',
-    likeCount: 120,
-    commentCount: 45,
-    updateTime: '2024-01-15T10:30:00',
-  },
-  {
-    id: 998,
-    title: '数据结构与算法期末复习重点整理',
-    content: '整理了COMP3121课程的所有重点知识点，包括动态规划、图算法、排序算法等，附带练习题...',
-    author: '算法大神',
-    likeCount: 95,
-    commentCount: 30,
-    updateTime: '2024-01-14T16:45:00',
-  },
-];
-
-const mockLatestPosts: API.PostSummary[] = [
-  {
-    id: 996,
-    title: '求组队！COMP6080 Assignment 3',
-    content: '正在寻找队友一起完成COMP6080的第三个作业，React项目，有经验的同学请联系...',
-    author: '新同学小李',
-    likeCount: 30,
-    commentCount: 10,
-    updateTime: '2024-01-16T09:15:00',
-  },
-  {
-    id: 995,
-    title: 'Kensington附近租房信息分享',
-    content: '刚找到不错的房源，地理位置优越，价格合理，有需要的同学可以了解一下...',
-    author: '租房小助手',
-    likeCount: 20,
-    commentCount: 5,
-    updateTime: '2024-01-16T08:30:00',
-  },
-];
 
 const ForumPage: React.FC = () => {
   const { initialState } = useModel('@@initialState');
@@ -114,23 +72,25 @@ const ForumPage: React.FC = () => {
   const [initialLikes, setInitialLikes] = useState<Record<number, number>>({});
   const [initialLiked, setInitialLiked] = useState<Record<number, boolean>>({});
 
-  // 加载Mock热门帖子
+  // 加载热门帖子（按点赞数降序，显示前2条）
   const loadHotPosts = async () => {
     try {
-      // 模拟API延迟
-      await new Promise((resolve) => setTimeout(resolve, 100));
-      setHotPosts(mockHotPosts);
+      const res = await apiFetchPosts(1, 2, {
+        params: { page: 1, pageSize: 2, sortBy: 'likeCount', sortOrder: 'desc' },
+      });
+      setHotPosts(res.postSumList || []);
     } catch (error) {
       console.error('加载热门帖子失败:', error);
     }
   };
 
-  // 加载Mock最新帖子
+  // 加载最新帖子（按时间降序，显示前2条）
   const loadLatestPosts = async () => {
     try {
-      // 模拟API延迟
-      await new Promise((resolve) => setTimeout(resolve, 100));
-      setLatestPosts(mockLatestPosts);
+      const res = await apiFetchPosts(1, 2, {
+        params: { page: 1, pageSize: 2, sortBy: 'updateTime', sortOrder: 'desc' },
+      });
+      setLatestPosts(res.postSumList || []);
     } catch (error) {
       console.error('加载最新帖子失败:', error);
     }
@@ -273,22 +233,39 @@ const ForumPage: React.FC = () => {
               <List.Item>
                 <Card
                   title={item.title}
-                  extra={`${item.author} 发布于 ${formatted}`}
+                  extra={
+                    <Space align="center" size="small">
+                      <Avatar
+                        src={(item as any).authorAvatar}
+                        icon={<UserOutlined />}
+                        size={24}
+                      />
+                      <Typography.Text type="secondary">
+                        {item.author} 发布于 {formatted}
+                      </Typography.Text>
+                    </Space>
+                  }
                   hoverable
                   onClick={() => handlePostClick(item.id, initialLiked[item.id])}
                 >
                   <p>{item.content}</p>
-                  <ForumLikeButton
-                    key={item.id}
-                    postId={item.id}
-                    initialCount={initialLikes[item.id]}
-                    initialLiked={initialLiked[item.id]}
-                    onChange={(id, liked, count) => {
-                      // 只改这个 post 的 liked/count，别全量重拉
-                      setInitialLiked((prev) => ({ ...prev, [id]: liked }));
-                      setInitialLikes((prev) => ({ ...prev, [id]: count }));
-                    }}
-                  />
+                  {/* 帖子操作区：点赞和评论数 */}
+                  <Space size="middle" style={{ marginTop: 8 }}>
+                    <ForumLikeButton
+                      key={item.id}
+                      postId={item.id}
+                      initialCount={initialLikes[item.id]}
+                      initialLiked={initialLiked[item.id]}
+                      onChange={(id, liked, count) => {
+                        // 只改这个 post 的 liked/count，别全量重拉
+                        setInitialLiked((prev) => ({ ...prev, [id]: liked }));
+                        setInitialLikes((prev) => ({ ...prev, [id]: count }));
+                      }}
+                    />
+                    <Typography.Text type="secondary">
+                      {item.commentCount} 条评论
+                    </Typography.Text>
+                  </Space>
                 </Card>
               </List.Item>
             );

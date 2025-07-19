@@ -1,195 +1,181 @@
 // src/pages/account/center/index.tsx
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Row, Col, Avatar, Statistic, Tabs, Space, Tag } from 'antd';
+import { Statistic, Tabs } from 'antd';
 import ProCard from '@ant-design/pro-card';
-import ProList, { ProListMetas } from '@ant-design/pro-components';
-import type { FC } from 'react';
-const { Divider } = ProCard;
+import ProList from '@ant-design/pro-list';
+import RcResizeObserver from 'rc-resize-observer';
 
+import {
+  getUserStats,
+  fetchActivities,
+  fetchNotes,
+  fetchPosts,
+} from '@/services/ant-design-pro/apis/userApi';
+
+const { Divider } = ProCard;
 const { TabPane } = Tabs;
 
-import RcResizeObserver from 'rc-resize-observer';
-import { useState } from 'react';
-
-interface UserInfo {
-  name: string;
-  avatar: string;
-  userid: string;
-  signature: string;
-  tags: { key: string; label: string }[];
-  title: string;
-  group: string;
-  geographic: { province: { label: string }; city: { label: string } };
-  phone: string;
-  email: string;
+interface Stats {
+  noteCount: number;
+  postCount: number;
+  noteLikeCount: number;
+  postLikeCount: number;
 }
 
-const mockActivities = Array.from({ length: 5 }).map((_, i) => ({
-  id: i,
-  title: `活动标题 ${i + 1}`,
-  start: '2025-06-0' + (i + 1),
-  updatedAt: `2025-05-2${i}`,
-  description: '这是一段活动的描述……',
-}));
+const AccountCenter: React.FC = () => {
+  // 1. 统计数据状态
+  const [stats, setStats] = useState<Stats>({
+    noteCount: 0,
+    postCount: 0,
+    noteLikeCount: 0,
+    postLikeCount: 0,
+  });
+  const [statsLoading, setStatsLoading] = useState<boolean>(false);
 
-const mockArticles = Array.from({ length: 5 }).map((_, i) => ({
-  id: i,
-  title: `示例文章 ${i + 1}`,
-  href: 'https://ant.design',
-  description: '这是一段文章的摘要……',
-  updatedAt: `2025-05-2${i}`,
-}));
+  // 2. 响应式布局开关
+  const [responsive, setResponsive] = useState<boolean>(false);
 
-const mockProjects = Array.from({ length: 5 }).map((_, i) => ({
-  id: i,
-  title: `项目名称 ${i + 1}`,
-  href: 'https://github.com/',
-  description: '项目简介……',
-  updatedAt: `2025-05-2${i}`,
-}));
+  // 3. 组件挂载后手动拉取统计数据
+  useEffect(() => {
+    async function loadStats() {
+      try {
+        setStatsLoading(true);
+        const data = await getUserStats(); // 你的 service 中封装了 request('/api/user/stats') 之类
+        setStats({
+          noteCount: data.noteCount,
+          postCount: data.postCount,
+          noteLikeCount: data.noteLikeCount,
+          postLikeCount: data.postLikeCount,
+        });
+      } catch (err) {
+        console.error('获取用户统计数据失败', err);
+      } finally {
+        setStatsLoading(false);
+      }
+    }
+    loadStats();
+  }, []);
 
-const AccountCenter: FC = () => {
-  const [responsive, setResponsive] = useState(false);
   return (
     <PageContainer>
       {/* 统计数字 */}
       <ProCard>
         <RcResizeObserver
           key="resize-observer"
-          onResize={(offset) => {
-            setResponsive(offset.width < 296);
-          }}
+          onResize={({ width }) => setResponsive(width < 296)}
         >
           <ProCard.Group direction={responsive ? 'column' : 'row'}>
-            <ProCard bodyStyle={{ padding: 0, textAlign: 'center' }}>
-              <Statistic title="笔记数" value={79} />
+            <ProCard bodyStyle={{ padding: 0, textAlign: 'center' }} loading={statsLoading}>
+              <Statistic title="笔记数" value={stats.noteCount} />
             </ProCard>
             <Divider type={responsive ? 'horizontal' : 'vertical'} />
-            <ProCard bodyStyle={{ padding: 0, textAlign: 'center' }}>
-              <Statistic title="帖子数" value={11} />
+            <ProCard bodyStyle={{ padding: 0, textAlign: 'center' }} loading={statsLoading}>
+              <Statistic title="帖子数" value={stats.postCount} />
             </ProCard>
             <Divider type={responsive ? 'horizontal' : 'vertical'} />
-            <ProCard bodyStyle={{ padding: 0, textAlign: 'center' }}>
-              <Statistic title="浏览量" value={93} />
+            <ProCard bodyStyle={{ padding: 0, textAlign: 'center' }} loading={statsLoading}>
+              <Statistic title="笔记被赞数" value={stats.noteLikeCount} />
             </ProCard>
             <Divider type={responsive ? 'horizontal' : 'vertical'} />
-            <ProCard bodyStyle={{ padding: 0, textAlign: 'center' }}>
-              <Statistic title="点赞数" value={112} />
+            <ProCard bodyStyle={{ padding: 0, textAlign: 'center' }} loading={statsLoading}>
+              <Statistic title="帖子被赞数" value={stats.postLikeCount} />
             </ProCard>
           </ProCard.Group>
         </RcResizeObserver>
       </ProCard>
 
+      {/* 列表区块：动态 / 我的笔记 / 我的帖子 */}
       <ProCard style={{ marginTop: 16 }}>
-        {/* Tab 切换：动态、文章、项目、应用 */}
         <Tabs defaultActiveKey="1">
+          {/* 动态
           <TabPane tab="动态" key="1">
-            <ProList<{
-              id: number;
-              title: string;
-              start: string;
-              updatedAt: string;
-              description: string;
-            }>
+            <ProList
               rowKey="id"
-              dataSource={mockActivities}
+              pagination={{ pageSize: 5 }}
+              request={async (params) => {
+                // 直接调用你的 service 函数
+                const res = await fetchActivities({
+                  current: params.current || 1,
+                  pageSize: params.pageSize || 5,
+                });
+                return { data: res.data, total: res.total };
+              }}
               metas={{
-                title: {
-                  dataIndex: 'title',
-                  render: (dom, entity) => (
-                    <a href="#!" style={{ fontWeight: 500 }}>
-                      {entity.title}
-                    </a>
-                  ),
-                },
+                title: { dataIndex: 'title' },
                 description: { dataIndex: 'description' },
                 subTitle: {
-                  render: (_, entity) => (
-                    <span>
-                      <span>开始时间：</span>
-                      {entity.start}
-                    </span>
-                  ),
+                  render: (_, item) => <>描述：{item.description}</>,
                 },
                 extra: {
-                  render: (_, entity) => (
-                    <div style={{ textAlign: 'right', color: '#999' }}>{entity.updatedAt}</div>
+                  render: (_, item) => (
+                    <div style={{ textAlign: 'right', color: '#999' }}>
+                      {item.updatedAt}
+                    </div>
                   ),
                 },
               }}
             />
-          </TabPane>
+          </TabPane> */}
 
+          {/* 我的笔记 */}
           <TabPane tab="我的笔记" key="2">
-            <ProList<{
-              id: number;
-              title: string;
-              href: string;
-              description: string;
-              updatedAt: string;
-            }>
+            <ProList
               rowKey="id"
-              dataSource={mockArticles}
+              pagination={{ pageSize: 5 }}
+              request={async (params) => {
+                const res = await fetchNotes({
+                  current: params.current || 1,
+                  pageSize: params.pageSize || 5,
+                });
+                console.log('Fetched notes:', res);
+                return { data: res.data, total: res.total };
+              }}
               metas={{
                 title: {
                   dataIndex: 'title',
-                  render: (dom, entity) => (
-                    <a
-                      href={entity.href}
-                      target="_blank"
-                      rel="noreferrer"
-                      style={{ fontWeight: 500 }}
-                    >
-                      {entity.title}
-                    </a>
+                  render: (dom, item) => (
+                    // <a href={item.href} target="_blank" rel="noreferrer">
+                      <div>{item.title}</div>
+                    // </a>
                   ),
                 },
                 description: { dataIndex: 'description' },
                 subTitle: {
-                  render: (_, entity) => (
-                    <span>
-                      <span>最后更新：</span>
-                      {entity.updatedAt}
-                    </span>
-                  ),
+                  render: (_, item) => <>最后更新：{item.updatedAt}</>,
                 },
+                content:{
+                  dataIndex: 'description',
+                  render: (text) => <div style={{ whiteSpace: 'pre-wrap' }}>{text}</div>,
+                }
               }}
             />
           </TabPane>
 
+          {/* 我的帖子 */}
           <TabPane tab="我的帖子" key="3">
-            <ProList<{
-              id: number;
-              title: string;
-              href: string;
-              description: string;
-              updatedAt: string;
-            }>
+            <ProList
               rowKey="id"
-              dataSource={mockProjects}
+              pagination={{ pageSize: 5 }}
+              request={async (params) => {
+                const res = await fetchPosts({
+                  current: params.current || 1,
+                  pageSize: params.pageSize || 5,
+                });
+                return { data: res.data, total: res.total };
+              }}
               metas={{
                 title: {
                   dataIndex: 'title',
-                  render: (dom, entity) => (
-                    <a
-                      href={entity.href}
-                      target="_blank"
-                      rel="noreferrer"
-                      style={{ fontWeight: 500 }}
-                    >
-                      {entity.title}
-                    </a>
+                  render: (dom, item) => (
+                    // <a href={item.href} target="_blank" rel="noreferrer">
+                      <>{item.title}</>
+                    // </a>
                   ),
                 },
                 description: { dataIndex: 'description' },
                 subTitle: {
-                  render: (_, entity) => (
-                    <span>
-                      <span>最后更新：</span>
-                      {entity.updatedAt}
-                    </span>
-                  ),
+                  render: (_, item) => <>最后更新：{item.updatedAt}</>,
                 },
               }}
             />

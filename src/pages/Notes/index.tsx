@@ -39,18 +39,24 @@ const Notes: React.FC = () => {
     console.log('initialLiked 更新了');
   }, [initialLiked]);
 
-  // 1. 拉取分类 & 课程 & 笔记
-  useEffect(() => {
+  // 封装：拉取分类 & 课程 & 笔记
+  const fetchCategoryCourses = async () => {
     if (!userId) {
       message.error('未获取到用户信息，无法加载笔记');
       return;
     }
-    currentNotes({ data: { userId } })
-      .then((res) => {
-        if (res) setCategoryCourses(res);
-        else message.error('notes 接口返回数据为空');
-      })
-      .catch(() => message.error('获取笔记数据失败'));
+    try {
+      const res = await currentNotes({ data: { userId } });
+      if (res) setCategoryCourses(res);
+      else message.error('notes 接口返回数据为空');
+    } catch {
+      message.error('获取笔记数据失败');
+    }
+  };
+
+  // 1. 拉取分类 & 课程 & 笔记
+  useEffect(() => {
+    fetchCategoryCourses();
   }, [userId]);
 
   // 2. 置顶课程
@@ -127,7 +133,7 @@ const Notes: React.FC = () => {
         <ListContainer style={{ marginTop: 12 }}>
           {/* 最热笔记列表 */}
           <ProCard
-            title="最热笔记"
+            title="🔥 最热笔记"
             bordered
             bodyStyle={{ padding: 2 }}
             style={{ marginBottom: 12, flex: 1 }}
@@ -180,7 +186,7 @@ const Notes: React.FC = () => {
 
           {/* 最新笔记列表 */}
           <ProCard
-            title="最新笔记"
+            title="⭐ 最新笔记"
             bordered
             bodyStyle={{ padding: 2 }}
             style={{ marginBottom: 12, flex: 1 }}
@@ -287,7 +293,7 @@ const Notes: React.FC = () => {
               defaultCollapsed
               collapsible
               wrap
-              extra={<AddNote userId={userId} />}
+              extra={<AddNote userId={userId} onSuccess={fetchCategoryCourses} />}
               tooltip={category.toolTip}
               subTitle={category.subTitle}
               bodyStyle={{ padding: 4 }}

@@ -84,3 +84,74 @@ export async function changeUserPassword(
     ...(options || {}),
   });
 }
+
+/** 获取用户的统计数据 GET /api/user/stats */
+export async function getUserStats(
+  options?: { [key: string]: any },
+): Promise<API.UserStats> {
+  return request<API.UserStats>('/api/user/stats', {
+    method: 'GET',
+    credentials: 'include',
+    ...(options || {}),
+  });
+}
+
+/** 拉取“动态”列表（分页） GET /api/user/activities */
+export async function fetchActivities(
+  params: { current?: number; pageSize?: number },
+  options?: { [key: string]: any },
+): Promise<API.PagedResult<API.MyActivity>> {
+  const resp = await request<{
+    items: API.MyActivity[];
+    total: number;
+  }>('/api/user/activities', {
+    method: 'GET',
+    params,
+    credentials: 'include',
+    ...(options || {}),
+  });
+  return {
+    data: resp.items,
+    total: resp.total,
+  };
+}
+
+/** 拉取“我的笔记”列表（分页） GET /api/user/notes */
+export async function fetchNotes(
+  params: { current?: number; pageSize?: number },
+  options?: { [key: string]: any },
+): Promise<API.PagedResult<API.MyNote>> {
+  const resp = await request<{
+    items: API.MyNote[];
+    total: number;
+  }>('/api/user/notes', {
+    method: 'GET',
+    params,
+    credentials: 'include',
+    ...(options || {}),
+  });
+  return {
+    data: resp.items,
+    total: resp.total,
+  };
+}
+
+/** 拉取“我的帖子”列表（分页） GET /api/user/posts */
+export async function fetchPosts(
+  params: { current?: number; pageSize?: number },
+  options?: { [key: string]: any },
+): Promise<API.PagedResult<API.MyPost>> {
+  const resp = await request<{
+    items: API.MyPost[];
+    total: number;
+  }>('/api/user/posts', {
+    method: 'GET',
+    params,
+    credentials: 'include',
+    ...(options || {}),
+  });
+  return {
+    data: resp.items,
+    total: resp.total,
+  };
+}

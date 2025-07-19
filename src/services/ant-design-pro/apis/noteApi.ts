@@ -13,7 +13,7 @@ export async function currentNotes(options?: { [key: string]: any }) {
 
 /** 添加笔记 POST /api/note/add */
 export async function addNote(options?: { [key: string]: any }) {
-  return request<API.CategoryCourse[]>('/api/note/add', {
+  return request<String>('/api/note/add', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

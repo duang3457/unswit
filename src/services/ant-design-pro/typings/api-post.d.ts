@@ -71,6 +71,7 @@ declare namespace API {
     title: string;
     content: string; // 内容摘要（前50个字符+...）
     author: string;
+    authorAvatar?: string; // 作者头像
     likeCount: number;
     commentCount: number;
     updateTime: string;

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Carousel } from 'antd';
 import { Card } from 'antd';
 import styled from 'styled-components';
 import ForumLikeButton from './LikeButton/index';
@@ -23,6 +24,7 @@ const CommentCountLabel = styled.strong`
   margin-left: 16px;
 `;
 
+
 const PostContent: React.FC<{ post: API.Post; liked: boolean }> = ({ post, liked }) => {
   return (
     <Card>
@@ -45,9 +47,13 @@ const PostContent: React.FC<{ post: API.Post; liked: boolean }> = ({ post, liked
       </p>
       {post.images && post.images.length > 0 && (
         <ImageContainer>
-          {post.images.map((url) => (
-            <PostImage key={url} src={url} alt="帖子图片" />
-          ))}
+          <Carousel dots arrows>
+            {post.images.map((url) => (
+              <div key={url} style={{ textAlign: 'center' }}>
+                <PostImage src={url} alt="帖子图片" />
+              </div>
+            ))}
+          </Carousel>
         </ImageContainer>
       )}
       <hr />
