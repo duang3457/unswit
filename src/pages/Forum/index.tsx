@@ -1,6 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-components';
-import { Card, List, Alert, Pagination, message, Row, Col, Typography, Space, Avatar } from 'antd';
+import {
+  Card,
+  List,
+  Alert,
+  Pagination,
+  message,
+  Row,
+  Col,
+  Typography,
+  Space,
+  Avatar,
+  Radio,
+} from 'antd';
 import { history, useModel } from 'umi';
 import styled from 'styled-components';
 import {
@@ -56,7 +68,6 @@ const CenteredContainer = styled.div`
   box-sizing: border-box;
 `;
 
-
 const ForumPage: React.FC = () => {
   const { initialState } = useModel('@@initialState');
   const userId = initialState?.currentUser?.id;
@@ -67,6 +78,8 @@ const ForumPage: React.FC = () => {
   const [total, setTotal] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(5);
+  // 排序状态：latest 最新，hot 热门
+  const [sortKey, setSortKey] = useState<'latest' | 'hot'>('latest');
 
   // 点赞相关状态
   const [initialLikes, setInitialLikes] = useState<Record<number, number>>({});
@@ -100,7 +113,16 @@ const ForumPage: React.FC = () => {
   const loadPosts = async (page: number, size: number) => {
     setLoading(true);
     try {
-      const res = await apiFetchPosts(page, size);
+      // 根据排序传参
+      const params: any = { page, pageSize: size };
+      if (sortKey === 'hot') {
+        params.sortBy = 'likeCount';
+        params.sortOrder = 'desc';
+      } else {
+        params.sortBy = 'updateTime';
+        params.sortOrder = 'desc';
+      }
+      const res = await apiFetchPosts(page, size, { params });
       setPosts(res.postSumList || []);
       setTotal(res.total);
       if (res.pageSize) setPageSize(res.pageSize);
@@ -112,12 +134,15 @@ const ForumPage: React.FC = () => {
     }
   };
 
-  // loadPosts
+  // 首页加载及分页、排序变化时刷新列表
   useEffect(() => {
     loadPosts(currentPage, pageSize);
+  }, [currentPage, pageSize, sortKey]);
+  // 热门/最新专区保持原调用
+  useEffect(() => {
     loadHotPosts();
     loadLatestPosts();
-  }, [currentPage, pageSize]);
+  }, []);
 
   // 批量获取点赞状态 & 计数
   useEffect(() => {
@@ -219,7 +244,31 @@ const ForumPage: React.FC = () => {
           </Col>
         </Row>
 
-        <CreatePost onSuccess={handlePostCreated} />
+        {/* 新建帖子和排序控件一行展示 */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: 16,
+            flexWrap: 'nowrap',
+            width: '100%',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          <CreatePost onSuccess={handlePostCreated} />
+          <Radio.Group
+            value={sortKey}
+            onChange={(e) => {
+              setSortKey(e.target.value);
+              setCurrentPage(1);
+            }}
+            style={{ display: 'flex', flexDirection: 'row', gap: 8 }}
+          >
+            <Radio.Button value="latest">最新</Radio.Button>
+            <Radio.Button value="hot">热门</Radio.Button>
+          </Radio.Group>
+        </div>
 
         {/* 原有的帖子列表 */}
         <List
@@ -235,11 +284,7 @@ const ForumPage: React.FC = () => {
                   title={item.title}
                   extra={
                     <Space align="center" size="small">
-                      <Avatar
-                        src={(item as any).authorAvatar}
-                        icon={<UserOutlined />}
-                        size={24}
-                      />
+                      <Avatar src={(item as any).authorAvatar} icon={<UserOutlined />} size={24} />
                       <Typography.Text type="secondary">
                         {item.author} 发布于 {formatted}
                       </Typography.Text>
@@ -262,9 +307,7 @@ const ForumPage: React.FC = () => {
                         setInitialLikes((prev) => ({ ...prev, [id]: count }));
                       }}
                     />
-                    <Typography.Text type="secondary">
-                      {item.commentCount} 条评论
-                    </Typography.Text>
+                    <Typography.Text type="secondary">{item.commentCount} 条评论</Typography.Text>
                   </Space>
                 </Card>
               </List.Item>
