@@ -86,9 +86,7 @@ export async function changeUserPassword(
 }
 
 /** 获取用户的统计数据 GET /api/user/stats */
-export async function getUserStats(
-  options?: { [key: string]: any },
-): Promise<API.UserStats> {
+export async function getUserStats(options?: { [key: string]: any }): Promise<API.UserStats> {
   return request<API.UserStats>('/api/user/stats', {
     method: 'GET',
     credentials: 'include',
@@ -122,7 +120,7 @@ export async function fetchNotes(
   options?: { [key: string]: any },
 ): Promise<API.PagedResult<API.MyNote>> {
   const resp = await request<{
-    items: API.MyNote[];
+    data: API.MyNote[];
     total: number;
   }>('/api/user/notes', {
     method: 'GET',
@@ -131,7 +129,7 @@ export async function fetchNotes(
     ...(options || {}),
   });
   return {
-    data: resp.items,
+    data: resp.data,
     total: resp.total,
   };
 }
@@ -142,7 +140,7 @@ export async function fetchPosts(
   options?: { [key: string]: any },
 ): Promise<API.PagedResult<API.MyPost>> {
   const resp = await request<{
-    items: API.MyPost[];
+    data: API.MyPost[];
     total: number;
   }>('/api/user/posts', {
     method: 'GET',
@@ -151,7 +149,29 @@ export async function fetchPosts(
     ...(options || {}),
   });
   return {
-    data: resp.items,
+    data: resp.data,
     total: resp.total,
   };
+}
+/** 删除笔记 DELETE /api/user/notes/:id */
+export async function deleteNote(
+  noteId: number,
+  options?: { [key: string]: any },
+): Promise<API.BaseResponse<number>> {
+  return request<API.BaseResponse<number>>(`/api/note/${noteId}`, {
+    method: 'DELETE',
+    credentials: 'include',
+    ...(options || {}),
+  });
+}
+/** 删除帖子 DELETE /api/user/posts/:id */
+export async function deletePost(
+  postId: number,
+  options?: { [key: string]: any },
+): Promise<API.BaseResponse<number>> {
+  return request<API.BaseResponse<number>>(`/api/posts/${postId}`, {
+    method: 'DELETE',
+    credentials: 'include',
+    ...(options || {}),
+  });
 }

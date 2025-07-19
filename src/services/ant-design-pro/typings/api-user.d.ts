@@ -65,7 +65,7 @@ declare namespace API {
   type PagedResult<T> = {
     data: T[];
     total: number;
-  }
+  };
 
   type MyActivity = {
     id: number;
@@ -73,22 +73,21 @@ declare namespace API {
     start: string;
     updatedAt: string;
     description: string;
-  }
+  };
 
   type MyNote = {
     id: number;
     title: string;
     href: string;
     description: string;
-    updatedAt: string;
-  }
+    updateTime: string;
+  };
 
   type MyPost = {
     id: number;
     title: string;
     href: string;
     description: string;
-    updatedAt: string;
-  }
-
+    updateTime: string;
+  };
 }

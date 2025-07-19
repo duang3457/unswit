@@ -1,16 +1,20 @@
 // src/pages/account/center/index.tsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Statistic, Tabs } from 'antd';
+import { Statistic, Tabs, message, Popconfirm } from 'antd';
 import ProCard from '@ant-design/pro-card';
-import ProList from '@ant-design/pro-list';
+// import ProList from '@ant-design/pro-list';
+import type { ActionType } from '@ant-design/pro-components';
+import { ProList } from '@ant-design/pro-components';
 import RcResizeObserver from 'rc-resize-observer';
+import { history } from 'umi';
 
 import {
   getUserStats,
-  fetchActivities,
   fetchNotes,
   fetchPosts,
+  deletePost,
+  deleteNote,
 } from '@/services/ant-design-pro/apis/userApi';
 
 const { Divider } = ProCard;
@@ -35,6 +39,10 @@ const AccountCenter: React.FC = () => {
 
   // 2. 响应式布局开关
   const [responsive, setResponsive] = useState<boolean>(false);
+
+  const postAction = useRef<ActionType>();
+  // 为笔记列表创建单独的 actionRef
+  const noteAction = useRef<ActionType>();
 
   // 3. 组件挂载后手动拉取统计数据
   useEffect(() => {
@@ -90,11 +98,10 @@ const AccountCenter: React.FC = () => {
         <Tabs defaultActiveKey="1">
           {/* 动态
           <TabPane tab="动态" key="1">
-            <ProList
+          <ProList<API.MyPost>
               rowKey="id"
               pagination={{ pageSize: 5 }}
               request={async (params) => {
-                // 直接调用你的 service 函数
                 const res = await fetchActivities({
                   current: params.current || 1,
                   pageSize: params.pageSize || 5,
@@ -120,7 +127,8 @@ const AccountCenter: React.FC = () => {
 
           {/* 我的笔记 */}
           <TabPane tab="我的笔记" key="2">
-            <ProList
+            <ProList<API.MyNote>
+              actionRef={noteAction}
               rowKey="id"
               pagination={{ pageSize: 5 }}
               request={async (params) => {
@@ -136,46 +144,112 @@ const AccountCenter: React.FC = () => {
                   dataIndex: 'title',
                   render: (dom, item) => (
                     // <a href={item.href} target="_blank" rel="noreferrer">
-                      <div>{item.title}</div>
+                    <div>{item.title}</div>
                     // </a>
                   ),
                 },
-                description: { dataIndex: 'description' },
-                subTitle: {
-                  render: (_, item) => <>最后更新：{item.updatedAt}</>,
+                // subTitle: { dataIndex: 'toolTips' },
+                description: {
+                  render: (_, item) => {
+                    const d = new Date(item.updateTime);
+                    const formatted = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
+                      2,
+                      '0',
+                    )}-${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(
+                      2,
+                      '0',
+                    )}时`;
+                    return <>最后更新：{formatted}</>;
+                  },
                 },
-                content:{
-                  dataIndex: 'description',
-                  render: (text) => <div style={{ whiteSpace: 'pre-wrap' }}>{text}</div>,
-                }
+                actions: {
+                  render: (text, item) => [
+                    <Popconfirm
+                      key="delete"
+                      title="确定要删除此笔记吗？"
+                      onConfirm={async () => {
+                        await deleteNote(item.id);
+                        message.success('删除成功');
+                        noteAction.current?.reload();
+                      }}
+                    >
+                      <a>删除</a>
+                    </Popconfirm>,
+                  ],
+                },
+                // content:{
+                //   dataIndex: 'description',
+                //   render: (text) => <div style={{ whiteSpace: 'pre-wrap' }}>{text}</div>,
+                // }
               }}
             />
           </TabPane>
 
           {/* 我的帖子 */}
           <TabPane tab="我的帖子" key="3">
-            <ProList
+            <ProList<API.MyPost>
               rowKey="id"
+              actionRef={postAction}
               pagination={{ pageSize: 5 }}
+              // 点击整行跳转到帖子详情
+              onItem={(item) => ({
+                onClick: () => history.push(`/forum/${item.id}`),
+                style: { cursor: 'pointer' },
+              })}
               request={async (params) => {
                 const res = await fetchPosts({
                   current: params.current || 1,
                   pageSize: params.pageSize || 5,
                 });
+                console.log('Fetched notes:', res);
                 return { data: res.data, total: res.total };
               }}
               metas={{
                 title: {
                   dataIndex: 'title',
-                  render: (dom, item) => (
-                    // <a href={item.href} target="_blank" rel="noreferrer">
-                      <>{item.title}</>
-                    // </a>
-                  ),
+                  render: (dom, item) => <>{item.title}</>,
                 },
-                description: { dataIndex: 'description' },
-                subTitle: {
-                  render: (_, item) => <>最后更新：{item.updatedAt}</>,
+                content: { dataIndex: 'content' },
+                description: {
+                  render: (_, item) => {
+                    const d = new Date(item.updateTime);
+                    const formatted = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
+                      2,
+                      '0',
+                    )}-${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(
+                      2,
+                      '0',
+                    )}时`;
+                    return <>最后更新：{formatted}</>;
+                  },
+                },
+                actions: {
+                  render: (text, item) => [
+                    // <a key="edit" onClick={() => history.push(`/forum/${item.id}`)}>
+                    //   编辑
+                    //   </a>,
+                    <a
+                      key="copy"
+                      onClick={() => {
+                        const url = `${window.location.origin}/forum/${item.id}`;
+                        navigator.clipboard.writeText(url);
+                        message.success('已复制链接');
+                      }}
+                    >
+                      复制
+                    </a>,
+                    <Popconfirm
+                      key="delete"
+                      title="确定要删除此帖子吗？"
+                      onConfirm={async () => {
+                        await deletePost(item.id);
+                        message.success('删除成功');
+                        postAction.current?.reload();
+                      }}
+                    >
+                      <a>删除</a>
+                    </Popconfirm>,
+                  ],
                 },
               }}
             />

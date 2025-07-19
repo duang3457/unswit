@@ -80,6 +80,8 @@ const ForumPage: React.FC = () => {
   const [pageSize, setPageSize] = useState<number>(5);
   // 排序状态：latest 最新，hot 热门
   const [sortKey, setSortKey] = useState<'latest' | 'hot'>('latest');
+  // 搜索关键词
+  const [searchTerm, setSearchTerm] = useState<string>('');
 
   // 点赞相关状态
   const [initialLikes, setInitialLikes] = useState<Record<number, number>>({});
@@ -122,6 +124,10 @@ const ForumPage: React.FC = () => {
         params.sortBy = 'updateTime';
         params.sortOrder = 'desc';
       }
+      // // 添加搜索参数
+      // if (searchTerm) {
+      //   params.search = searchTerm;
+      // }
       const res = await apiFetchPosts(page, size, { params });
       setPosts(res.postSumList || []);
       setTotal(res.total);
@@ -137,7 +143,7 @@ const ForumPage: React.FC = () => {
   // 首页加载及分页、排序变化时刷新列表
   useEffect(() => {
     loadPosts(currentPage, pageSize);
-  }, [currentPage, pageSize, sortKey]);
+  }, [currentPage, pageSize, sortKey, searchTerm]);
   // 热门/最新专区保持原调用
   useEffect(() => {
     loadHotPosts();
@@ -270,6 +276,18 @@ const ForumPage: React.FC = () => {
           </Radio.Group>
         </div>
 
+        {/* // 搜索框
+        <Input.Search
+          placeholder="搜索帖子"
+          allowClear
+          enterButton
+          onSearch={(value) => {
+            setSearchTerm(value);
+            setCurrentPage(1);
+          }}
+          style={{ width: 300, marginBottom: 16 }}
+        /> */}
+
         {/* 原有的帖子列表 */}
         <List
           rowKey="id"
@@ -319,6 +337,8 @@ const ForumPage: React.FC = () => {
           current={currentPage}
           pageSize={pageSize}
           total={total}
+          showSizeChanger
+          pageSizeOptions={['5', '10', '20']}
           onChange={(page, size) => {
             setCurrentPage(page);
             setPageSize(size);
