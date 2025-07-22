@@ -11,8 +11,8 @@ import { stringify } from 'querystring';
  * 配置request请求时的默认参数
  */
 const request = extend({
-  credentials: 'include', // 默认请求是否带上cookie
-  prefix: process.env.NODE_ENV === 'production' ? 'http://124.220.105.199:8080' : undefined,
+  credentials: 'include',
+  // prefix: process.env.NODE_ENV === 'production' ? 'http://XXX.XXX.XXX:XXXX' : undefined,
   // requestType: 'form',
 });
 
