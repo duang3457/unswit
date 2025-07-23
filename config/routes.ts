@@ -32,6 +32,14 @@ export default [
   },
 
   {
+    path: '/newWelcome',
+    name: 'test',
+    // access: 'canGuest',
+    icon: 'smile',
+    component: './NewWelcome',
+  },
+
+  {
     path: '/notes',
     name: 'unswit课程笔记',
     icon: 'book',
