@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { ArrowRightOutlined } from '@ant-design/icons';
+import { useModel } from 'umi';
 
 const TitleContainer = styled.div`
   flex-direction: column;
@@ -16,6 +17,7 @@ const MainTitle = styled.span`
   line-height: 1.1; /* 统一行高，保证主标题和副标题风格一致 */
   letter-spacing: 0.08em;
   word-wrap: break-word;
+  z-index: 1; /* 保证主标题文字在上层显示 */
 `;
 const SubTitle = styled.span`
   font-size: clamp(2.25rem, 7vw, 72px);
@@ -28,11 +30,13 @@ const SubTitle = styled.span`
   color: transparent;
   -webkit-text-stroke: 2px black;
   text-stroke: 2px black;
+  z-index: 1; /* 保证副标题描边文字在上层显示 */
 `;
 
 const SubtitleRow = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between; /* 两端对齐，欢迎语在右上角 */
   margin-bottom: 1.5rem;
 `;
 const SubtitleLine = styled.div`
@@ -47,6 +51,7 @@ const SubtitleText = styled.span`
   color: #222;
   font-family: 'ABeeZee', sans-serif;
   letter-spacing: 0.1em;
+  z-index: 1; /* 保证副标题文字在上层显示 */
 `;
 
 const LoginButton = styled.button`
@@ -77,7 +82,7 @@ const BottomLeftInfo = styled.div`
   color: #222;
   font-size: 1.1rem;
   line-height: 1.5;
-  z-index: 1;
+  z-index: 1; /* 保证左下角信息区文字在上层显示 */
   @media (max-width: 1200px) {
     display: none;
   }
@@ -108,6 +113,7 @@ const InfoSection = styled.div`
   color: #222;
   font-size: 0.735rem;
   line-height: 1.7;
+  z-index: 1; /* 保证信息区文字在上层显示 */
   h3 {
     font-size: clamp(1rem, 1.8vw, 1.6rem);/
     font-family: 'ABeeZee', sans-serif;
@@ -115,6 +121,7 @@ const InfoSection = styled.div`
     font-weight: 450;
     letter-spacing: 0.04em;
     line-height: 1.2;
+    z-index: 1; /* 保证标题在上层显示 */
   }
   p {
     font-size: 0.945rem;
@@ -125,6 +132,7 @@ const InfoSection = styled.div`
     margin-right: 0;
     max-width: clamp(224px, 42vw, 730px);
     width: 100%;
+    z-index: 1; /* 保证段落文字在上层显示 */
   }
 `;
 
@@ -155,6 +163,7 @@ const OuterLeftSpacer = styled.div`
   flex-direction: row;
   height: auto;
   position: relative;
+  width: 95%;
 
 
   /* 左下角梦幻蓝色光晕背景 */
@@ -196,11 +205,49 @@ const LeftGap = styled.div`
   flex-shrink: 0;
 `;
 
+// 欢迎语样式，使用 Abhaya Libre ExtraBold 字体
+const WelcomeText = styled.span`
+  font-family: 'Abhaya Libre', serif;
+  font-weight: 800; /* ExtraBold */
+  font-size: 1.35rem;
+  color: #111;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  line-height: 1; /* 让文字和半圆更贴合 */
+  z-index: 1; /* 保证欢迎语文字在上层显示 */
+`;
+// 右上角欢迎语和半圆的容器
+const WelcomeRightBox = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: 1.2rem;
+  position: relative; /* 让z-index生效 */
+  z-index: 1; /* 保证右上角内容在上层显示 */
+`;
+const BlackHalfCircle = () => (
+  <svg width="25" height="25" viewBox="0 0 28 28" style={{ marginLeft: '0.5rem', display: 'inline-block', verticalAlign: 'middle' }}>
+    <path d="M0,0 A14,14 0 1,1 0,28 Z" fill="#000" />
+  </svg>
+);
+
+const SubtitleLeftBox = styled.div`
+  display: flex;
+  align-items: center;
+  @media (max-width: 700px) {
+    display: none;
+  }
+`;
+
 
 const NewWelcome: React.FC = () => {
+  const { initialState } = useModel('@@initialState');
+  const currentUser = initialState?.currentUser;
+
+  const userName = currentUser?.userName;
+
   useEffect(() => {
     const link = document.createElement('link');
-    link.href = 'https://fonts.googleapis.com/css2?family=Bungee&display=swap';
+    link.href = 'https://fonts.googleapis.com/css2?family=Bungee&family=Abhaya+Libre:wght@800&display=swap';
     link.rel = 'stylesheet';
     document.head.appendChild(link);
     return () => {
@@ -214,8 +261,16 @@ const NewWelcome: React.FC = () => {
       <LeftGap />
       <div style={{flex: 1}}>
         <SubtitleRow>
-          <SubtitleLine />
-          <SubtitleText>UNSWIT 学习社区</SubtitleText>
+          <SubtitleLeftBox>
+            <SubtitleLine />
+            <SubtitleText>UNSWIT 学习社区</SubtitleText>
+          </SubtitleLeftBox>
+          <WelcomeRightBox>
+            <WelcomeText>
+              UNSWIT 学习社区欢迎你，{userName || '某位不知名的同学'}！
+            </WelcomeText>
+            <BlackHalfCircle />
+          </WelcomeRightBox>
         </SubtitleRow>
         <TitleContainer>
           <MainTitle>
