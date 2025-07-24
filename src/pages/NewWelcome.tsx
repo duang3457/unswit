@@ -38,6 +38,7 @@ const SubtitleRow = styled.div`
   align-items: center;
   justify-content: space-between; /* 两端对齐，欢迎语在右上角 */
   margin-bottom: 1.5rem;
+  position: relative; /* 让子元素绝对定位基于此容器 */
 `;
 const SubtitleLine = styled.div`
   height: 2px;
@@ -108,23 +109,23 @@ const InfoLink = styled.a`
 const InfoSection = styled.div`
   width: 100%;
   max-width: 1250px;
-  margin: 2rem 4vw 0 0;
+  margin: 0 4vw 0 0;
   font-family: 'ABeeZee', sans-serif;
   color: #222;
   font-size: 0.735rem;
   line-height: 1.7;
   z-index: 1; /* 保证信息区文字在上层显示 */
   h3 {
-    font-size: clamp(1rem, 1.8vw, 1.6rem);/
+    font-size: clamp(1.4rem, 1.8vw, 2.5rem);/
     font-family: 'ABeeZee', sans-serif;
-    margin: 1rem 0 1rem 0;
+    margin: 0 0 1rem 0;
     font-weight: 450;
     letter-spacing: 0.04em;
     line-height: 1.2;
     z-index: 1; /* 保证标题在上层显示 */
   }
   p {
-    font-size: 0.945rem;
+    font-size: 1.1rem;
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -221,8 +222,12 @@ const WelcomeRightBox = styled.div`
   display: flex;
   align-items: center;
   margin-left: 1.2rem;
-  position: relative; /* 让z-index生效 */
-  z-index: 1; /* 保证右上角内容在上层显示 */
+  position: relative;
+  z-index: 1;
+  @media (max-width: 700px) {
+    margin-left:25vw;
+    justify-content: flex-end;
+  }
 `;
 const BlackHalfCircle = () => (
   <svg width="25" height="25" viewBox="0 0 28 28" style={{ marginLeft: '0.5rem', display: 'inline-block', verticalAlign: 'middle' }}>
