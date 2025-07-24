@@ -2,13 +2,12 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { ArrowRightOutlined } from '@ant-design/icons';
 
-// 自定义大标题样式
 const TitleContainer = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
   display: flex;
-  margin-bottom: 32px;
+  margin-bottom: 16px;
 `;
 const MainTitle = styled.span`
   color: black;
@@ -23,16 +22,15 @@ const SubTitle = styled.span`
   font-size: clamp(2.25rem, 7vw, 72px);
   font-family: 'Bungee', sans-serif;
   font-weight: 400;
-  line-height: clamp(2.7rem, 8.6vw, 86px);
+  line-height: clamp(2.3rem, 7vw, 60px);
   letter-spacing: 0.072em;
   word-wrap: break-word;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.2rem;
   color: transparent;
   -webkit-text-stroke: 2px black;
   text-stroke: 2px black;
 `;
 
-// 副标题和横线样式
 const SubtitleRow = styled.div`
   display: flex;
   align-items: center;
@@ -73,7 +71,7 @@ const LoginButton = styled.button`
   }
 `;
 const BottomLeftInfo = styled.div`
-  margin-top: 17rem;
+  margin-top: 2rem;
   min-width: 180px;
   max-width: 15vw;
   font-family: 'ABeeZee', sans-serif;
@@ -105,24 +103,24 @@ const InfoSection = styled.div`
   margin: 2rem 4vw 0 0;
   font-family: 'ABeeZee', sans-serif;
   color: #222;
-  font-size: 1.05rem;
+  font-size: 0.735rem;
   line-height: 1.7;
   h3 {
-    font-size: clamp(1.5rem, 4vw, 2.8rem);
+    font-size: clamp(1rem, 1.8vw, 1.6rem);/
     font-family: 'ABeeZee', sans-serif;
-    margin: 2.5rem 0 1.5rem 0;
+    margin: 1rem 0 1rem 0;
     font-weight: 450;
     letter-spacing: 0.04em;
     line-height: 1.2;
   }
   p {
-    font-size: 1.35rem;
+    font-size: 0.945rem;
     display: flex;
     align-items: center;
     justify-content: flex-start;
     gap: 0.7em;
     margin-right: 0;
-    max-width: clamp(320px, 60vw, 900px);
+    max-width: clamp(224px, 42vw, 730px);
     width: 100%;
   }
 `;
@@ -130,8 +128,8 @@ const InfoSection = styled.div`
 const SectionDivider = styled.hr`
   border: 0;
   border-top: 1.5px solid #e0e0e0;
-  margin-top: 2.2rem;
-  margin-bottom: 2.2rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 `;
 
 const RowWrapper = styled.div`
@@ -139,8 +137,7 @@ const RowWrapper = styled.div`
   align-items: flex-end;
   justify-content: space-between;
   width: 100%;
-  margin-top: 5rem;
-  gap: 2vw;
+  gap: 30vw;
   @media (max-width: 900px) {
     flex-direction: column;
     align-items: flex-start;
@@ -151,7 +148,7 @@ const RowWrapper = styled.div`
 const OuterLeftSpacer = styled.div`
   display: flex;
   flex-direction: row;
-  min-height: 100vh;
+  height: 80vh;
 `;
 const LeftGap = styled.div`
   width: 2.5vw;
