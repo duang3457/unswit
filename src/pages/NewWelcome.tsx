@@ -8,6 +8,9 @@ const TitleContainer = styled.div`
   justify-content: flex-start;
   align-items: flex-start;
   display: flex;
+  @media (max-width: 600px) {
+    width: 100%;
+  }
 `;
 const MainTitle = styled.span`
   color: black;
@@ -18,6 +21,12 @@ const MainTitle = styled.span`
   letter-spacing: 0.08em;
   word-wrap: break-word;
   z-index: 1; /* 保证主标题文字在上层显示 */
+  @media (max-width: 600px) {
+    font-size: 2rem;
+    width: 100%;
+    max-width: 390px;
+    margin: 0 auto;
+  }
 `;
 const SubTitle = styled.span`
   font-size: clamp(2.25rem, 7vw, 72px);
@@ -31,6 +40,12 @@ const SubTitle = styled.span`
   -webkit-text-stroke: 2px black;
   text-stroke: 2px black;
   z-index: 1; /* 保证副标题描边文字在上层显示 */
+  @media (max-width: 600px) {
+    font-size: 1.5rem;
+    width: 100%;
+    max-width: 390px;
+    margin: 0 auto;
+  }
 `;
 
 const SubtitleRow = styled.div`
@@ -71,8 +86,15 @@ const LoginButton = styled.button`
   gap: 1.2rem;
   box-shadow: 0 0.125rem 0.5rem rgba(0,0,0,0.10);
   transition: background 0.2s;
+  z-index: 1;
   &:hover {
     background: #222;
+  }
+  @media (max-width: 600px) {
+    width: 100%;
+    justify-content: center;
+    font-size: 1rem;
+    padding: 0.7rem 0;
   }
 `;
 const BottomLeftInfo = styled.div`
@@ -84,6 +106,12 @@ const BottomLeftInfo = styled.div`
   font-size: 1.1rem;
   line-height: 1.5;
   z-index: 1; /* 保证左下角信息区文字在上层显示 */
+  @media (max-width: 600px) {
+    font-size: 0.95rem;
+    min-width: 0;
+    max-width: 100%;
+    margin-bottom: 1rem;
+  }
   @media (max-width: 1200px) {
     display: none;
   }
@@ -107,34 +135,52 @@ const InfoLink = styled.a`
 `;
 
 const InfoSection = styled.div`
-  width: 80%;
+  width: 100%;
   max-width: 1250px;
-  margin: 0 2vw 0 0;
+  margin: 0 clamp(0rem, 2vw, 2vw) 0 0;
   font-family: 'ABeeZee', sans-serif;
   color: #222;
-  font-size: 0.735rem;
+  font-size: 0.95rem;
   line-height: 1.7;
-  z-index: 1; /* 保证信息区文字在上层显示 */
+  z-index: 1;
+  word-break: break-word;
+  @media (max-width: 600px) {
+    margin: 0 auto;
+    max-width: 390px;
+    width: 100%;
+  }
   h3 {
-    font-size: clamp(1.4rem, 1.5vw, 2.5rem);/
-    font-family: 'ABeeZee', sans-serif;
+    font-size: clamp(1.1rem, 4vw, 2.5rem);
     margin: 0 0 1rem 0;
     font-weight: 450;
     letter-spacing: 0.04em;
     width: 100%;
     line-height: 1.2;
-    z-index: 1; /* 保证标题在上层显示 */
+    z-index: 1;
+    @media (max-width: 600px) {
+      max-width: 390px;
+      margin-left: auto;
+      margin-right: auto;
+      width: 100%;
+    }
   }
   p {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     display: flex;
     align-items: center;
     justify-content: flex-start;
     gap: 0.7em;
     margin-right: 0;
-    max-width: clamp(14rem, 42vw, 50.625rem);
+    max-width: 100%;
     width: 100%;
-    z-index: 1; /* 保证段落文字在上层显示 */
+    z-index: 1;
+    word-break: break-word;
+    @media (max-width: 600px) {
+      max-width: 390px;
+      margin-left: auto;
+      margin-right: auto;
+      width: 100%;
+    }
   }
 `;
 
@@ -156,6 +202,12 @@ const InfoRowWrapper = styled.div`
   position: relative;
   min-height: 220px;
   gap: clamp(2rem, 10vw, 50vh);
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    min-height: unset;
+  }
   @media (max-width: 1200px) {
     flex-direction: column;
     align-items: stretch;
@@ -169,6 +221,11 @@ const OuterLeftSpacer = styled.div`
   height: 100%;
   position: relative;
   width: 95%;
+  @media (max-width: 600px) {
+    width: 100%;
+    padding: 0 0.5rem;
+    min-width: 0;
+  }
 
 
   /* 左下角梦幻蓝色光晕背景 */
@@ -225,9 +282,14 @@ const WelcomeText = styled.span`
 const WelcomeRightBox = styled.div`
   display: flex;
   align-items: center;
-  margin-left: clamp(15vw, 25vw, 40vw);
+  margin-left: clamp(2vw, 25vw, 40vw);
   position: relative;
   z-index: 1;
+  @media (max-width: 600px) {
+    margin-left: 0;
+    justify-content: flex-end;
+    width: 100%;
+  }
   @media (max-width: 1200px) {
     justify-content: flex-end;
   }
