@@ -30,7 +30,7 @@ const PostContent: React.FC<{ post: API.Post; liked: boolean }> = ({ post, liked
     <Card>
       <p>
         <strong>作者：</strong>
-        {post.authorName}
+        {post.author}
       </p>
       <p>
         <strong>创建时间：</strong>

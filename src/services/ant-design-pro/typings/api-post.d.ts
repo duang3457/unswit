@@ -30,7 +30,7 @@ declare namespace API {
 
   type Post = {
     id: number;
-    authorName: string; // 作者名称
+    author: string; // 作者名称
     title: string;
     images?: string[]; // 帖子图片列表(url)
     content: string; // 帖子内容
