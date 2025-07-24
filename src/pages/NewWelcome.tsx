@@ -107,20 +107,21 @@ const InfoLink = styled.a`
 `;
 
 const InfoSection = styled.div`
-  width: 100%;
+  width: 80%;
   max-width: 1250px;
-  margin: 0 4vw 0 0;
+  margin: 0 2vw 0 0;
   font-family: 'ABeeZee', sans-serif;
   color: #222;
   font-size: 0.735rem;
   line-height: 1.7;
   z-index: 1; /* 保证信息区文字在上层显示 */
   h3 {
-    font-size: clamp(1.4rem, 1.8vw, 2.5rem);/
+    font-size: clamp(1.4rem, 1.5vw, 2.5rem);/
     font-family: 'ABeeZee', sans-serif;
     margin: 0 0 1rem 0;
     font-weight: 450;
     letter-spacing: 0.04em;
+    width: 100%;
     line-height: 1.2;
     z-index: 1; /* 保证标题在上层显示 */
   }
@@ -131,7 +132,7 @@ const InfoSection = styled.div`
     justify-content: flex-start;
     gap: 0.7em;
     margin-right: 0;
-    max-width: clamp(224px, 42vw, 730px);
+    max-width: clamp(14rem, 42vw, 50.625rem);
     width: 100%;
     z-index: 1; /* 保证段落文字在上层显示 */
   }
@@ -146,15 +147,18 @@ const SectionDivider = styled.hr`
   align-self: flex-start;
 `;
 
-const RowWrapper = styled.div`
+// 新增底部信息行容器，左右贴底部，中间居中
+const InfoRowWrapper = styled.div`
   display: flex;
-  align-items: flex-end;
   justify-content: space-between;
+  align-items: flex-start;
   width: 100%;
-  gap: 30vw;
-  @media (max-width: 900px) {
+  position: relative;
+  min-height: 220px;
+  gap: clamp(2rem, 10vw, 50vh);
+  @media (max-width: 1200px) {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
     gap: 2rem;
   }
 `;
@@ -162,7 +166,7 @@ const RowWrapper = styled.div`
 const OuterLeftSpacer = styled.div`
   display: flex;
   flex-direction: row;
-  height: auto;
+  height: 100%;
   position: relative;
   width: 95%;
 
@@ -221,11 +225,10 @@ const WelcomeText = styled.span`
 const WelcomeRightBox = styled.div`
   display: flex;
   align-items: center;
-  margin-left: 1.2rem;
+  margin-left: clamp(15vw, 25vw, 40vw);
   position: relative;
   z-index: 1;
-  @media (max-width: 700px) {
-    margin-left:25vw;
+  @media (max-width: 1200px) {
     justify-content: flex-end;
   }
 `;
@@ -238,9 +241,17 @@ const BlackHalfCircle = () => (
 const SubtitleLeftBox = styled.div`
   display: flex;
   align-items: center;
-  @media (max-width: 700px) {
+  @media (max-width: 1200px) {
     display: none;
   }
+`;
+
+// 新增左侧列容器，纵向排列按钮和信息区
+const LeftColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 17vh; /* 按钮和信息区的间距，可调整 */
 `;
 
 
@@ -284,42 +295,48 @@ const NewWelcome: React.FC = () => {
           <SubTitle>
             Learning and  <br />exchange
           </SubTitle>
-          <LoginButton onClick={() => window.location.href = '/user/login'}>
-            Log in <ArrowRightOutlined style={{ fontSize: '1.2em' }} />
-          </LoginButton>
+          {/* 在页面结构中调整按钮和底部信息行的位置 */}
+          <div style={{ width: '100%' }}>
+            {/* 在 InfoRowWrapper 结构中调整为左侧 LeftColumn，右侧 InfoSection */}
+            <InfoRowWrapper>
+              <LeftColumn>
+                <LoginButton onClick={() => window.location.href = '/user/login'}>
+                  Log in <ArrowRightOutlined style={{ fontSize: '1.2em' }} />
+                </LoginButton>
+                <BottomLeftInfo>
+                  <InfoLine>
+                    <InfoLink href="/forum">UNSWIT<br/>STUDY FORUM</InfoLink>
+                  </InfoLine>
+                  <InfoDivider />
+                  <InfoLine>
+                    <InfoLink href="/notes">Note/Resource<br/>sharing platform</InfoLink>
+                  </InfoLine>
+                  <InfoDivider />
+                  <InfoLine>The University of<br/>New South Wales</InfoLine>
+                </BottomLeftInfo>
+              </LeftColumn>
+              <InfoSection>
+                <h3>写在前面</h3>
+                <p>
+                  Hello, UNSWit 学习社区的朋友们！我们很高兴地宣布，UNSWit 学习社区正式上线啦！🎉<br />
+                  我们是普通的UNSW学IT的中国学生。我们希望通过这个平台，能够为大家提供一个友好、开放的学习环境，让每位成员在网站资源中有所收获，让每位成员都能在这里找到志同道合的伙伴，共同进步。<br />
+                  这里是一个专为UNSW学生和校友打造的学习交流平台，旨在帮助大家更好地学习和分享知识。无论你是新生还是老生，这里都有丰富的资源和热情的社区等着你来探索！
+                </p>
+                <SectionDivider />
+                <h3>笔记区灵感（为什么要做笔记/资源分享平台）</h3>
+                <p>
+                  俗话说得好：好记性不如烂笔头。一个好的学习方式是将自己在课上的输入，尝试在笔记中输出出来。<br />
+                  同时，我们希望能够做出一个友好的学习圈子：因为今日你的笔记，就是明日他人的宝藏。<br />
+                  虽然我们身处在不同的地方/教室/图书馆，但是我们的笔记可以将我们联系起来，<br />
+                  从此，空阔的教室将不再只有你一个人，我们在学习路上将不再孤独，我们的留学生活要更加充实。<br />
+                  最后，让我们在笔下相遇，互相学习，共同进步。 Power! （口拙舌笨，词不达意，敬请谅解）
+                </p>
+                <SectionDivider />
+                <h3>论坛区灵感（为什么要开个论坛，与小红书/微信的区别在哪里）</h3>
+              </InfoSection>
+            </InfoRowWrapper>
+          </div>
         </TitleContainer>
-        <RowWrapper>
-          <BottomLeftInfo>
-            <InfoLine>
-              <InfoLink href="/forum">UNSWIT<br/>STUDY FORUM</InfoLink>
-            </InfoLine>
-            <InfoDivider />
-            <InfoLine>
-              <InfoLink href="/notes">Note/Resource<br/>sharing platform</InfoLink>
-            </InfoLine>
-            <InfoDivider />
-            <InfoLine>The University of<br/>New South Wales</InfoLine>
-          </BottomLeftInfo>
-          <InfoSection>
-            <h3>写在前面</h3>
-            <p>
-              Hello, UNSWit 学习社区的朋友们！我们很高兴地宣布，UNSWit 学习社区正式上线啦！🎉<br />
-              我们是普通的UNSW学IT的中国学生。我们希望通过这个平台，能够为大家提供一个友好、开放的学习环境，让每位成员在网站资源中有所收获，让每位成员都能在这里找到志同道合的伙伴，共同进步。<br />
-              这里是一个专为UNSW学生和校友打造的学习交流平台，旨在帮助大家更好地学习和分享知识。无论你是新生还是老生，这里都有丰富的资源和热情的社区等着你来探索！
-            </p>
-            <SectionDivider />
-            <h3>笔记区灵感（为什么要做笔记/资源分享平台）</h3>
-            <p>
-              俗话说得好：好记性不如烂笔头。一个好的学习方式是将自己在课上的输入，尝试在笔记中输出出来。<br />
-              同时，我们希望能够做出一个友好的学习圈子：因为今日你的笔记，就是明日他人的宝藏。<br />
-              虽然我们身处在不同的地方/教室/图书馆，但是我们的笔记可以将我们联系起来，<br />
-              从此，空阔的教室将不再只有你一个人，我们在学习路上将不再孤独，我们的留学生活要更加充实。<br />
-              最后，让我们在笔下相遇，互相学习，共同进步。 Power! （口拙舌笨，词不达意，敬请谅解）
-            </p>
-            <SectionDivider />
-            <h3>论坛区灵感（为什么要开个论坛，与小红书/微信的区别在哪里）</h3>
-          </InfoSection>
-        </RowWrapper>
       </div>
     </OuterLeftSpacer>
   );
