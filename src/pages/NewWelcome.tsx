@@ -7,14 +7,13 @@ const TitleContainer = styled.div`
   justify-content: flex-start;
   align-items: flex-start;
   display: flex;
-  margin-bottom: 16px;
 `;
 const MainTitle = styled.span`
   color: black;
   font-size: clamp(2.5rem, 8vw, 80px);
   font-family: 'Bungee', sans-serif;
   font-weight: 400;
-  line-height: clamp(2.7rem, 8.6vw, 86px);
+  line-height: 1.1; /* 统一行高，保证主标题和副标题风格一致 */
   letter-spacing: 0.08em;
   word-wrap: break-word;
 `;
@@ -22,10 +21,10 @@ const SubTitle = styled.span`
   font-size: clamp(2.25rem, 7vw, 72px);
   font-family: 'Bungee', sans-serif;
   font-weight: 400;
-  line-height: clamp(2.3rem, 7vw, 60px);
+  line-height: 1.1; /* 统一行高，保证主标题和副标题风格一致 */
   letter-spacing: 0.072em;
   word-wrap: break-word;
-  margin-bottom: 1.2rem;
+  margin-top: 0;
   color: transparent;
   -webkit-text-stroke: 2px black;
   text-stroke: 2px black;
@@ -78,6 +77,10 @@ const BottomLeftInfo = styled.div`
   color: #222;
   font-size: 1.1rem;
   line-height: 1.5;
+  z-index: 1;
+  @media (max-width: 1200px) {
+    display: none;
+  }
 `;
 const InfoLine = styled.div`
   margin-bottom: 0.5rem;
@@ -130,6 +133,8 @@ const SectionDivider = styled.hr`
   border-top: 1.5px solid #e0e0e0;
   margin-top: 1rem;
   margin-bottom: 1rem;
+  width: 100%;
+  align-self: flex-start;
 `;
 
 const RowWrapper = styled.div`
@@ -148,7 +153,41 @@ const RowWrapper = styled.div`
 const OuterLeftSpacer = styled.div`
   display: flex;
   flex-direction: row;
-  height: 80vh;
+  height: auto;
+  position: relative;
+
+
+  /* 左下角梦幻蓝色光晕背景 */
+  &::before {
+    content: '';
+    position: absolute;
+    left: -120px;
+    bottom: -120px;
+    width: 300px;
+    height: 300px;
+    background: #D6F2FF;
+    box-shadow: 0 0 300px 100px #D6F2FF;
+    border-radius: 9999px;
+    filter: blur(150px);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* 右上角梦幻蓝色光晕背景 */
+  &::after {
+    content: '';
+    position: absolute;
+    right: -120px;
+    top: -120px;
+    width: 300px;
+    height: 300px;
+    background: #D6F2FF;
+    box-shadow: 0 0 300px 100px #D6F2FF;
+    border-radius: 9999px;
+    filter: blur(150px);
+    z-index: 0;
+    pointer-events: none;
+  }
 `;
 const LeftGap = styled.div`
   width: 2.5vw;
