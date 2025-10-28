@@ -17,26 +17,26 @@ export type GlobalHeaderRightProps = {
  */
 const loginOut = async () => {
   await outLogin();
-  
+
   // 导入WebSocket管理器并停止重连
   const { chatWebSocketManager } = await import('@/utils/websocket');
-  
+
   // 停止WebSocket重连并断开连接
   chatWebSocketManager.stopReconnection();
   chatWebSocketManager.disconnect();
-  
+
   // 清除本地存储的token和userId
   localStorage.removeItem('token');
   localStorage.removeItem('userToken');
   localStorage.removeItem('authToken');
   localStorage.removeItem('userId');
-  
+
   // 清除cookie中的access_token
   document.cookie = 'access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-  
+
   console.log('Cleared authentication tokens from localStorage and cookies');
   console.log('Stopped WebSocket reconnection and disconnected');
-  
+
   const { query = {}, search, pathname } = history.location;
   const { redirect } = query;
   // Note: There may be security issues, please note

@@ -31,7 +31,7 @@ chatRequest.interceptors.request.use((url, options): any => {
   };
 
   if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+    headers.Authorization = `Bearer ${token}`;
     headers['X-Chat-Token'] = token;
   }
 
@@ -47,10 +47,10 @@ chatRequest.interceptors.request.use((url, options): any => {
 /**
  * 聊天响应拦截器
  */
-chatRequest.interceptors.response.use(async (response, options): Promise<any> => {
+chatRequest.interceptors.response.use(async (response): Promise<any> => {
   try {
     const res = await response.clone().json();
-    
+
     if (res.code === 0 || res.success === true) {
       return res.data || res;
     } else if (res.code === 1) {
@@ -76,7 +76,7 @@ chatRequest.interceptors.response.use(async (response, options): Promise<any> =>
  */
 export const chatApi = {
   // 获取聊天室列表
-  getChatRooms: (options?: { [key: string]: any }) => {
+  getChatRooms: (options?: Record<string, any>) => {
     return chatRequest<any[]>('/api/chat/rooms', {
       method: 'GET',
       ...(options || {}),
@@ -84,7 +84,7 @@ export const chatApi = {
   },
 
   // 获取聊天室历史消息
-  getRoomMessages: (roomId: string, options?: { [key: string]: any }) => {
+  getRoomMessages: (roomId: string, options?: Record<string, any>) => {
     return chatRequest<any[]>(`/api/chat/rooms/${roomId}/messages`, {
       method: 'GET',
       ...(options || {}),
@@ -92,7 +92,7 @@ export const chatApi = {
   },
 
   // 发送消息
-  sendMessage: (roomId: string, content: string, options?: { [key: string]: any }) => {
+  sendMessage: (roomId: string, content: string, options?: Record<string, any>) => {
     return chatRequest<any>('/api/chat/messages', {
       method: 'POST',
       headers: {
@@ -108,7 +108,7 @@ export const chatApi = {
   },
 
   // 获取用户信息
-  getUserInfo: (options?: { [key: string]: any }) => {
+  getUserInfo: (options?: Record<string, any>) => {
     return chatRequest<any>('/api/chat/user', {
       method: 'GET',
       ...(options || {}),
@@ -116,7 +116,7 @@ export const chatApi = {
   },
 
   // 创建聊天室
-  createRoom: (name: string, description?: string, options?: { [key: string]: any }) => {
+  createRoom: (name: string, description?: string, options?: Record<string, any>) => {
     return chatRequest<any>('/api/chat/rooms', {
       method: 'POST',
       headers: {
@@ -131,7 +131,7 @@ export const chatApi = {
   },
 
   // 加入聊天室
-  joinRoom: (roomId: string, options?: { [key: string]: any }) => {
+  joinRoom: (roomId: string, options?: Record<string, any>) => {
     return chatRequest<any>(`/api/chat/rooms/${roomId}/join`, {
       method: 'POST',
       ...(options || {}),
@@ -139,7 +139,7 @@ export const chatApi = {
   },
 
   // 离开聊天室
-  leaveRoom: (roomId: string, options?: { [key: string]: any }) => {
+  leaveRoom: (roomId: string, options?: Record<string, any>) => {
     return chatRequest<any>(`/api/chat/rooms/${roomId}/leave`, {
       method: 'POST',
       ...(options || {}),
@@ -147,7 +147,7 @@ export const chatApi = {
   },
 
   // 检查连接状态
-  checkConnection: (options?: { [key: string]: any }) => {
+  checkConnection: (options?: Record<string, any>) => {
     return chatRequest<any>('/api/chat/ping', {
       method: 'GET',
       ...(options || {}),

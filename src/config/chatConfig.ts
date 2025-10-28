@@ -10,13 +10,13 @@ const isDev = process.env.NODE_ENV === 'development';
 export const CHAT_CONFIG = {
   // 主要业务服务端口（用户登录、注册等）
   MAIN_SERVER_PORT: 8080,
-  
+
   // 聊天服务端口（WebSocket、聊天API等）
   CHAT_SERVER_PORT: 8082,
-  
-  // 服务器主机
-  HOST: 'localhost',
-  
+
+  // 服务器主机 TODO：替换ip
+  HOST: isDev ? '127.0.0.1' : '111.111.111.111',
+
   // 协议配置
   HTTP_PROTOCOL: isDev ? 'http' : 'https',
   WS_PROTOCOL: isDev ? 'ws' : 'wss',
@@ -25,23 +25,26 @@ export const CHAT_CONFIG = {
 // URL 构建器
 export const buildUrl = {
   // 主要业务API URL
-  mainApi: (path: string) => `${CHAT_CONFIG.HTTP_PROTOCOL}://${CHAT_CONFIG.HOST}:${CHAT_CONFIG.MAIN_SERVER_PORT}${path}`,
-  
+  mainApi: (path: string) =>
+    `${CHAT_CONFIG.HTTP_PROTOCOL}://${CHAT_CONFIG.HOST}:${CHAT_CONFIG.MAIN_SERVER_PORT}${path}`,
+
   // 聊天API URL
-  chatApi: (path: string) => `${CHAT_CONFIG.HTTP_PROTOCOL}://${CHAT_CONFIG.HOST}:${CHAT_CONFIG.CHAT_SERVER_PORT}${path}`,
-  
+  chatApi: (path: string) =>
+    `${CHAT_CONFIG.HTTP_PROTOCOL}://${CHAT_CONFIG.HOST}:${CHAT_CONFIG.CHAT_SERVER_PORT}${path}`,
+
   // WebSocket URL
-  webSocket: (path: string = '/chat') => `${CHAT_CONFIG.WS_PROTOCOL}://${CHAT_CONFIG.HOST}:${CHAT_CONFIG.CHAT_SERVER_PORT}${path}`,
+  webSocket: (path: string = '/chat') =>
+    `${CHAT_CONFIG.WS_PROTOCOL}://${CHAT_CONFIG.HOST}:${CHAT_CONFIG.CHAT_SERVER_PORT}${path}`,
 };
 
 // 服务端点
 export const ENDPOINTS = {
   // 主要业务端点
   MAIN_SERVER: `${CHAT_CONFIG.HTTP_PROTOCOL}://${CHAT_CONFIG.HOST}:${CHAT_CONFIG.MAIN_SERVER_PORT}`,
-  
+
   // 聊天服务端点
   CHAT_SERVER: `${CHAT_CONFIG.HTTP_PROTOCOL}://${CHAT_CONFIG.HOST}:${CHAT_CONFIG.CHAT_SERVER_PORT}`,
-  
+
   // WebSocket端点
   WEBSOCKET_SERVER: `${CHAT_CONFIG.WS_PROTOCOL}://${CHAT_CONFIG.HOST}:${CHAT_CONFIG.CHAT_SERVER_PORT}`,
 };
@@ -55,7 +58,7 @@ export const API_PATHS = {
     USER: '/api/chat/user',
     PING: '/api/chat/ping',
   },
-  
+
   // 主要业务API路径
   MAIN: {
     LOGIN: '/api/user/login',
@@ -67,17 +70,19 @@ export const API_PATHS = {
 
 // 请求识别函数
 export const isChatRequest = (url: string): boolean => {
-  return url.includes('/api/chat/') || 
-         url.includes(':8082') || 
-         url.startsWith(ENDPOINTS.CHAT_SERVER);
+  return (
+    url.includes('/api/chat/') || url.includes(':8082') || url.startsWith(ENDPOINTS.CHAT_SERVER)
+  );
 };
 
 export const isMainRequest = (url: string): boolean => {
-  return url.includes('/api/user/') || 
-         url.includes('/api/notes/') || 
-         url.includes('/api/posts/') ||
-         url.includes(':8080') ||
-         url.startsWith(ENDPOINTS.MAIN_SERVER);
+  return (
+    url.includes('/api/user/') ||
+    url.includes('/api/notes/') ||
+    url.includes('/api/posts/') ||
+    url.includes(':8080') ||
+    url.startsWith(ENDPOINTS.MAIN_SERVER)
+  );
 };
 
 // 默认导出配置

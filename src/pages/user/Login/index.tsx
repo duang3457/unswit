@@ -48,23 +48,23 @@ const Login: React.FC = () => {
       if (response) {
         const defaultLoginSuccessMessage = '登录成功！';
         message.success(defaultLoginSuccessMessage);
-        
+
         // 直接从登录响应中获取token并保存
         if (typeof response === 'string' && response.trim()) {
           localStorage.setItem('token', response);
           console.log('Token saved from login response:', response.substring(0, 20) + '***');
         }
-        
+
         // 获取用户信息
         await fetchUserInfo();
-        
+
         // 保存用户ID到localStorage用于WebSocket连接
         const userInfo = await initialState?.fetchUserInfo?.();
         if (userInfo && userInfo.id) {
           localStorage.setItem('userId', userInfo.id);
           console.log('UserId saved for WebSocket:', userInfo.id);
         }
-        
+
         /** 此方法会跳转到 redirect 参数所在的位置 */
         if (!history) return;
         const { query } = history.location;

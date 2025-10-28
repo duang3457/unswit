@@ -116,12 +116,15 @@ const PostDetailPage: React.FC = () => {
   const { post, comments } = data;
 
   return (
-    <PageContainer childrenContentStyle={{ padding: 8, marginTop: 0 }} header={{ title: post.title, breadcrumb: {}, onBack: () => history.goBack() }}>
+    <PageContainer
+      childrenContentStyle={{ padding: 8, marginTop: 0 }}
+      header={{ title: post.title, breadcrumb: {}, onBack: () => history.goBack() }}
+    >
       <ContentWrapper>
         <PostContent post={post} liked={liked} />
-        
+
         <CommentList comments={comments as API.CommentTree[]} onReply={handleReply} />
-        
+
         <CommentEditor
           value={commentContent}
           loading={commentLoading}

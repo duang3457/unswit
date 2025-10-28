@@ -8,7 +8,7 @@
  */
 const getAccessTokenFromCookie = (): string | null => {
   const cookies = document.cookie.split(';');
-  for (let cookie of cookies) {
+  for (const cookie of cookies) {
     const [name, value] = cookie.trim().split('=');
     if (name === 'access_token') {
       return decodeURIComponent(value);
@@ -23,10 +23,11 @@ const getAccessTokenFromCookie = (): string | null => {
  */
 export const getStoredToken = (): string | null => {
   // 首先尝试从localStorage获取
-  let token = localStorage.getItem('token') || 
-              localStorage.getItem('userToken') || 
-              localStorage.getItem('authToken');
-  
+  let token =
+    localStorage.getItem('token') ||
+    localStorage.getItem('userToken') ||
+    localStorage.getItem('authToken');
+
   // 如果localStorage没有，尝试从cookie获取
   if (!token) {
     token = getAccessTokenFromCookie();
@@ -36,7 +37,7 @@ export const getStoredToken = (): string | null => {
       console.log('Token synced from cookie to localStorage');
     }
   }
-  
+
   return token;
 };
 
@@ -56,10 +57,10 @@ export const clearTokens = (): void => {
   localStorage.removeItem('token');
   localStorage.removeItem('userToken');
   localStorage.removeItem('authToken');
-  
+
   // 清除cookie中的access_token
   document.cookie = 'access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-  
+
   console.log('All authentication tokens cleared from localStorage and cookies');
 };
 
@@ -77,7 +78,10 @@ export const generateTempToken = (userId: string | number, username?: string): s
  * 刷新或生成用户token
  * 在登录成功后调用，确保聊天系统有可用的token
  */
-export const refreshUserToken = async (userInfo?: { id: string | number; userName?: string }): Promise<string | null> => {
+export const refreshUserToken = async (userInfo?: {
+  id: string | number;
+  userName?: string;
+}): Promise<string | null> => {
   try {
     // 首先尝试从cookie获取access_token
     const cookieToken = getAccessTokenFromCookie();
@@ -117,12 +121,12 @@ export const isTokenValid = (token: string): boolean => {
   if (!token || token.trim().length === 0) {
     return false;
   }
-  
+
   // 基本格式检查
   if (token.length < 10) {
     return false;
   }
-  
+
   // 可以添加更多验证逻辑，比如检查过期时间等
   return true;
 };
@@ -133,18 +137,18 @@ export const isTokenValid = (token: string): boolean => {
  */
 export const getTokenForWebSocket = (): string | null => {
   const token = getStoredToken();
-  
+
   if (!token) {
     console.warn('No token found for WebSocket connection');
     return null;
   }
-  
+
   if (!isTokenValid(token)) {
     console.warn('Invalid token found, clearing...');
     clearTokens();
     return null;
   }
-  
+
   return token;
 };
 
@@ -168,7 +172,7 @@ export const removeTokenChangeListener = (listener: TokenChangeListener): void =
 };
 
 const notifyTokenChange = (token: string | null): void => {
-  tokenChangeListeners.forEach(listener => {
+  tokenChangeListeners.forEach((listener) => {
     try {
       listener(token);
     } catch (error) {

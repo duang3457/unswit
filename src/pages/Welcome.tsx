@@ -45,7 +45,7 @@ const Welcome: React.FC = () => {
               最后，让我们在笔下相遇，互相学习，共同进步。 Power! （口拙舌笨，词不达意，敬请谅解）
             </p>
             <h3>论坛区灵感（为什么要开个论坛，与小红书/微信的区别在哪里）</h3>
-            <p></p>
+            <p />
           </ProCard>
         </Typography.Text>
         <br />

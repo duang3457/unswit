@@ -24,7 +24,6 @@ const CommentCountLabel = styled.strong`
   margin-left: 16px;
 `;
 
-
 const PostContent: React.FC<{ post: API.Post; liked: boolean }> = ({ post, liked }) => {
   return (
     <Card>

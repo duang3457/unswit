@@ -47,11 +47,10 @@ request.interceptors.request.use((url, options): any => {
   };
 });
 
-
 /**
  * 所有响应拦截器
  */
-request.interceptors.response.use(async (response, options): Promise<any> => {
+request.interceptors.response.use(async (response): Promise<any> => {
   const res = await response.clone().json();
   if (res.code === 0) {
     return res.data;

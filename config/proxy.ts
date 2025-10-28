@@ -8,7 +8,6 @@
  */
 export default {
   dev: {
-    // localhost:8000/api/** -> 后端服务地址
     '/api': {
       // 要代理的地址 - 确保后端服务在此端口运行
       target: 'http://localhost:8080',

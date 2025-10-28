@@ -1,11 +1,7 @@
 import React, { useState } from 'react';
 import { Button, message } from 'antd';
-import {
-  DrawerForm,
-  ProFormText,
-  ProFormTextArea,
-  ProFormInstance,
-} from '@ant-design/pro-components';
+import type { ProFormInstance } from '@ant-design/pro-components';
+import { DrawerForm, ProFormText, ProFormTextArea } from '@ant-design/pro-components';
 import { createPost as apiCreatePost } from '@/services/ant-design-pro/apis/postApi';
 import styled from 'styled-components';
 

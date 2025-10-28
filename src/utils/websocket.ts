@@ -34,7 +34,7 @@ export class ChatWebSocketManager {
   private ws: WebSocket | null = null;
   private messageHandlers: ((message: any) => void)[] = [];
   private stateChangeHandlers: (() => void)[] = [];
-  
+
   public isConnected: boolean = false;
   public connectionError: string | null = null;
   private reconnectAttempts: number = 0;
@@ -47,7 +47,7 @@ export class ChatWebSocketManager {
   connect(userId?: string): boolean {
     // 重置重连标志，允许连接
     this.shouldReconnect = true;
-    
+
     // 清除之前的重连定时器
     if (this.reconnectTimer) {
       clearTimeout(this.reconnectTimer);
@@ -79,9 +79,9 @@ export class ChatWebSocketManager {
           return false; // 没有userId时不连接
         }
       }
-      
+
       console.log('Connecting to WebSocket:', wsUrl.replace(/uid=[^&]*/, 'uid=***'));
-      
+
       this.ws = new WebSocket(wsUrl);
       this.setupEventHandlers();
       return true;
@@ -121,7 +121,7 @@ export class ChatWebSocketManager {
     this.ws.onclose = (event) => {
       console.log('WebSocket closed:', event.code, event.reason);
       this.isConnected = false;
-      
+
       // 只有在允许重连且不是正常关闭时才尝试重连
       if (this.shouldReconnect && event.code !== 1000) {
         this.connectionError = `连接关闭: ${event.reason || '未知原因'} (${event.code})`;
@@ -129,7 +129,7 @@ export class ChatWebSocketManager {
       } else {
         console.log('WebSocket connection closed, reconnection disabled or normal closure');
       }
-      
+
       this.notifyStateChange();
     };
 
@@ -155,7 +155,7 @@ export class ChatWebSocketManager {
 
     // 检查是否还有有效的userId
     const hasUserId = localStorage.getItem('userId');
-    
+
     if (!hasUserId) {
       console.log('No valid userId found, stopping reconnect attempts');
       this.shouldReconnect = false;
@@ -163,13 +163,15 @@ export class ChatWebSocketManager {
     }
 
     this.reconnectAttempts++;
-    console.log(`Attempting to reconnect (${this.reconnectAttempts}/${this.maxReconnectAttempts})...`);
-    
+    console.log(
+      `Attempting to reconnect (${this.reconnectAttempts}/${this.maxReconnectAttempts})...`,
+    );
+
     // 清除之前的定时器
     if (this.reconnectTimer) {
       clearTimeout(this.reconnectTimer);
     }
-    
+
     this.reconnectTimer = setTimeout(() => {
       this.connect();
     }, this.reconnectDelay);
@@ -184,7 +186,7 @@ export class ChatWebSocketManager {
 
     const message = {
       type,
-      payload
+      payload,
     };
 
     try {
@@ -202,7 +204,7 @@ export class ChatWebSocketManager {
     return this.sendMessage('clientMessages', {
       roomId,
       content,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
   }
 
@@ -211,7 +213,7 @@ export class ChatWebSocketManager {
     return this.sendMessage('requestHistory', {
       roomId,
       beforeMessageId, // 在此消息之前的消息
-      limit
+      limit,
     });
   }
 
@@ -243,7 +245,7 @@ export class ChatWebSocketManager {
 
   // 通知消息处理器
   private notifyMessageHandlers(message: any): void {
-    this.messageHandlers.forEach(handler => {
+    this.messageHandlers.forEach((handler) => {
       try {
         handler(message);
       } catch (error) {
@@ -254,7 +256,7 @@ export class ChatWebSocketManager {
 
   // 通知状态变化处理器
   private notifyStateChange(): void {
-    this.stateChangeHandlers.forEach(handler => {
+    this.stateChangeHandlers.forEach((handler) => {
       try {
         handler();
       } catch (error) {
@@ -271,7 +273,7 @@ export class ChatWebSocketManager {
       clearTimeout(this.reconnectTimer);
       this.reconnectTimer = null;
     }
-    
+
     if (this.ws) {
       this.ws.close(1000, 'Manual disconnect');
       this.ws = null;
@@ -294,13 +296,18 @@ export class ChatWebSocketManager {
   // 获取连接状态
   getConnectionState(): string {
     if (!this.ws) return 'CLOSED';
-    
+
     switch (this.ws.readyState) {
-      case WebSocket.CONNECTING: return 'CONNECTING';
-      case WebSocket.OPEN: return 'OPEN';
-      case WebSocket.CLOSING: return 'CLOSING';
-      case WebSocket.CLOSED: return 'CLOSED';
-      default: return 'UNKNOWN';
+      case WebSocket.CONNECTING:
+        return 'CONNECTING';
+      case WebSocket.OPEN:
+        return 'OPEN';
+      case WebSocket.CLOSING:
+        return 'CLOSING';
+      case WebSocket.CLOSED:
+        return 'CLOSED';
+      default:
+        return 'UNKNOWN';
     }
   }
 }
