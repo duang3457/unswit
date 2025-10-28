@@ -22,6 +22,22 @@ const request = extend({
 request.interceptors.request.use((url, options): any => {
   console.log(`do request url = ${url}`);
 
+  // 检查是否是聊天相关请求，如果是则重定向到8082端口
+  if (url.includes('/api/chat/')) {
+    const chatUrl = url.replace(/^(https?:\/\/[^\/]+)?/, 'http://localhost:8082');
+    console.log(`Redirecting chat request to: ${chatUrl}`);
+    return {
+      url: chatUrl,
+      options: {
+        ...options,
+        headers: {
+          ...options.headers,
+          'X-Chat-Request': 'true',
+        },
+      },
+    };
+  }
+
   return {
     url,
     options: {
@@ -30,6 +46,7 @@ request.interceptors.request.use((url, options): any => {
     },
   };
 });
+
 
 /**
  * 所有响应拦截器
@@ -43,6 +60,8 @@ request.interceptors.response.use(async (response, options): Promise<any> => {
     return res.data;
   } else if (res.code === 40100) {
     message.error('请先登录');
+    // 清除token
+    localStorage.removeItem('token');
     history.replace({
       pathname: '/user/login',
       search: stringify({

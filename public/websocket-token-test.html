@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Token 认证测试</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        h1 {
+            color: #1890ff;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        input[type="text"], input[type="url"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d9d9d9;
+            border-radius: 6px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #1890ff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: #40a9ff;
+        }
+        button:disabled {
+            background-color: #d9d9d9;
+            cursor: not-allowed;
+        }
+        .status {
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-weight: 500;
+        }
+        .status.connected {
+            background-color: #f6ffed;
+            border: 1px solid #b7eb8f;
+            color: #52c41a;
+        }
+        .status.disconnected {
+            background-color: #fff2f0;
+            border: 1px solid #ffccc7;
+            color: #ff4d4f;
+        }
+        .status.connecting {
+            background-color: #e6f7ff;
+            border: 1px solid #91d5ff;
+            color: #1890ff;
+        }
+        .log-container {
+            background-color: #f5f5f5;
+            border: 1px solid #d9d9d9;
+            border-radius: 6px;
+            padding: 12px;
+            height: 200px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+        }
+        .message-form {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .message-input {
+            flex: 1;
+            padding: 8px 12px;
+        }
+        .send-button {
+            padding: 8px 16px;
+        }
+        .note {
+            background-color: #e6f7ff;
+            border: 1px solid #91d5ff;
+            border-radius: 6px;
+            padding: 16px;
+            margin: 20px 0;
+        }
+        .note h3 {
+            margin: 0 0 10px 0;
+            color: #1890ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 WebSocket Token 认证测试</h1>
+        
+        <div class="note">
+            <h3>📝 测试说明</h3>
+            <p>此页面用于测试基于 URL 参数的 Token 认证方式。Token 将作为查询参数附加到 WebSocket 连接 URL 中。</p>
+        </div>
+
+        <div class="form-group">
+            <label for="wsUrl">WebSocket 服务器地址:</label>
+            <input type="url" id="wsUrl" value="ws://localhost:8082/chat" placeholder="ws://localhost:8082/chat">
+        </div>
+
+        <div class="form-group">
+            <label for="token">认证 Token:</label>
+            <input type="text" id="token" placeholder="请输入用户Token" value="test_user_123">
+        </div>
+
+        <div class="form-group">
+            <button onclick="connectWebSocket()">连接 WebSocket</button>
+            <button onclick="disconnectWebSocket()" disabled id="disconnectBtn">断开连接</button>
+            <button onclick="sendHello()" disabled id="helloBtn">发送 Hello</button>
+            <button onclick="clearLog()">清空日志</button>
+        </div>
+
+        <div class="form-group">
+            <label>连接状态:</label>
+            <div id="status" class="status disconnected">未连接</div>
+        </div>
+
+        <div class="form-group">
+            <label>消息发送测试:</label>
+            <div class="message-form">
+                <input type="text" id="messageInput" class="message-input" placeholder="输入测试消息" disabled>
+                <button onclick="sendMessage()" class="send-button" disabled id="sendBtn">发送消息</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>连接日志:</label>
+            <div id="log" class="log-container"></div>
+        </div>
+
+        <div class="note">
+            <h3>🔧 后端配置要求</h3>
+            <ul>
+                <li><strong>URL 解析：</strong> 后端需要从 WebSocket 连接的 URL 查询参数中提取 <code>token</code></li>
+                <li><strong>连接格式：</strong> <code>ws://localhost:8082/chat?token=your_token_here</code></li>
+                <li><strong>认证验证：</strong> 后端验证 Token 有效性，如果无效应关闭连接</li>
+                <li><strong>消息格式：</strong> 保持现有的 JSON 消息格式不变</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        let ws = null;
+        let reconnectAttempts = 0;
+        const maxReconnectAttempts = 3;
+
+        function log(message, type = 'info') {
+            const logContainer = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            const prefix = type === 'error' ? '❌' : type === 'success' ? '✅' : 'ℹ️';
+            logContainer.textContent += `[${timestamp}] ${prefix} ${message}\n`;
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        function updateStatus(status, className) {
+            const statusElement = document.getElementById('status');
+            statusElement.textContent = status;
+            statusElement.className = `status ${className}`;
+        }
+
+        function updateButtons(connected) {
+            document.getElementById('disconnectBtn').disabled = !connected;
+            document.getElementById('helloBtn').disabled = !connected;
+            document.getElementById('sendBtn').disabled = !connected;
+            document.getElementById('messageInput').disabled = !connected;
+        }
+
+        function connectWebSocket() {
+            const wsUrl = document.getElementById('wsUrl').value;
+            const token = document.getElementById('token').value;
+
+            if (!wsUrl) {
+                alert('请输入 WebSocket 服务器地址');
+                return;
+            }
+
+            if (!token) {
+                alert('请输入认证 Token');
+                return;
+            }
+
+            // 构建带 Token 的 WebSocket URL
+            const separator = wsUrl.includes('?') ? '&' : '?';
+            const fullUrl = `${wsUrl}${separator}token=${encodeURIComponent(token)}`;
+            
+            log(`正在连接到: ${wsUrl}?token=***`);
+            updateStatus('正在连接...', 'connecting');
+
+            try {
+                ws = new WebSocket(fullUrl);
+
+                ws.onopen = function(event) {
+                    log('WebSocket 连接成功建立', 'success');
+                    updateStatus('已连接', 'connected');
+                    updateButtons(true);
+                    reconnectAttempts = 0;
+                    
+                    // 自动发送hello消息
+                    setTimeout(() => {
+                        sendHello();
+                    }, 500);
+                };
+
+                ws.onmessage = function(event) {
+                    log(`收到消息: ${event.data}`, 'success');
+                    
+                    try {
+                        const data = JSON.parse(event.data);
+                        if (data.type === 'hello') {
+                            log('收到服务器 Hello 响应，连接验证成功', 'success');
+                        } else if (data.type === 'error') {
+                            log(`服务器错误: ${data.payload.message || '未知错误'}`, 'error');
+                        }
+                    } catch (e) {
+                        log('消息解析失败: ' + e.message, 'error');
+                    }
+                };
+
+                ws.onclose = function(event) {
+                    log(`WebSocket 连接关闭: ${event.code} - ${event.reason || '未知原因'}`, 'error');
+                    updateStatus('连接已关闭', 'disconnected');
+                    updateButtons(false);
+                    
+                    // 如果不是正常关闭，尝试重连
+                    if (event.code !== 1000 && reconnectAttempts < maxReconnectAttempts) {
+                        reconnectAttempts++;
+                        log(`尝试重连 (${reconnectAttempts}/${maxReconnectAttempts})...`);
+                        setTimeout(connectWebSocket, 3000);
+                    }
+                };
+
+                ws.onerror = function(event) {
+                    log('WebSocket 发生错误', 'error');
+                    updateStatus('连接错误', 'disconnected');
+                };
+
+            } catch (error) {
+                log(`连接失败: ${error.message}`, 'error');
+                updateStatus('连接失败', 'disconnected');
+            }
+        }
+
+        function disconnectWebSocket() {
+            if (ws) {
+                ws.close(1000, 'Manual disconnect');
+                ws = null;
+                log('主动断开连接');
+                updateStatus('已断开', 'disconnected');
+                updateButtons(false);
+            }
+        }
+
+        function sendHello() {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                const message = {
+                    type: 'hello',
+                    payload: {}
+                };
+                ws.send(JSON.stringify(message));
+                log(`发送: ${JSON.stringify(message)}`);
+            }
+        }
+
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const content = messageInput.value.trim();
+            
+            if (!content) {
+                alert('请输入消息内容');
+                return;
+            }
+
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                const message = {
+                    type: 'clientMessages',
+                    payload: {
+                        roomId: 'test_room',
+                        content: content,
+                        timestamp: Date.now()
+                    }
+                };
+                ws.send(JSON.stringify(message));
+                log(`发送消息: ${JSON.stringify(message)}`);
+                messageInput.value = '';
+            }
+        }
+
+        function clearLog() {
+            document.getElementById('log').textContent = '';
+        }
+
+        // 页面加载完成后的初始化
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        log('页面加载完成，可以开始测试 Token 认证');
+    </script>
+</body>
+</html>

@@ -8,9 +8,9 @@
  */
 export default {
   dev: {
-    // localhost:8000/api/** -> https://preview.pro.ant.design/api/**
+    // localhost:8000/api/** -> 后端服务地址
     '/api': {
-      // 要代理的地址
+      // 要代理的地址 - 确保后端服务在此端口运行
       target: 'http://localhost:8080',
       // 配置了这个可以从 http 代理到 https
       // 依赖 origin 的功能可能需要这个，比如 cookie

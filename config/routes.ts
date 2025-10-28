@@ -57,6 +57,13 @@ export default [
   },
 
   {
+    path: '/chat',
+    name: '在线聊天',
+    icon: 'wechat',
+    component: './Chat',
+  },
+
+  {
     path: '/admin',
     layout: false,
     access: 'canAdmin',
