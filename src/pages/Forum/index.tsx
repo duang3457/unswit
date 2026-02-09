@@ -14,7 +14,7 @@ import {
   Radio,
 } from 'antd';
 import { history, useModel } from 'umi';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import {
   fetchPosts as apiFetchPosts,
   fetchPostLikes as apiFetchPostLikes,
@@ -68,6 +68,24 @@ const CenteredContainer = styled.div`
   box-sizing: border-box;
 `;
 
+// 高亮动画List.Item
+const AnimatedListItem = styled(List.Item)<{ $highlighted?: boolean }>`
+  && {
+    background: ${({ $highlighted }) => ($highlighted ? '#e6f7ff' : '#fff')};
+    border-radius: 6px;
+    transition: background 0.8s cubic-bezier(0.4,0,0.2,1);
+  }
+`;
+
+const AnimatedCard = styled(Card)<{ $highlighted?: boolean }>`
+  && {
+    background: ${({ $highlighted }) => ($highlighted ? '#e6f7ff' : '#fff')};
+    border: none;
+    border-radius: 6px;
+    transition: background 0.8s cubic-bezier(0.4,0,0.2,1);
+  }
+`;
+
 const ForumPage: React.FC = () => {
   const { initialState } = useModel('@@initialState');
   const userId = initialState?.currentUser?.id;
@@ -86,6 +104,7 @@ const ForumPage: React.FC = () => {
   // 点赞相关状态
   const [initialLikes, setInitialLikes] = useState<Record<number, number>>({});
   const [initialLiked, setInitialLiked] = useState<Record<number, boolean>>({});
+  const [highlightedPostId, setHighlightedPostId] = useState<number | null>(null);
 
   // 加载热门帖子（按点赞数降序，显示前2条）
   const loadHotPosts = async () => {
@@ -167,6 +186,23 @@ const ForumPage: React.FC = () => {
       });
   }, [posts]);
 
+  // 页面加载时检测localStorage，自动跳转页码并高亮
+  useEffect(() => {
+    const lastView = localStorage.getItem('forum_last_view');
+    if (lastView) {
+      try {
+        const { page, postId } = JSON.parse(lastView);
+        if (page && page !== currentPage) {
+          setCurrentPage(page); // 跳转到存储的页码
+        }
+        setHighlightedPostId(postId);
+        // 1.5秒后自动取消高亮
+        setTimeout(() => setHighlightedPostId(null), 2000);
+      } catch {}
+      localStorage.removeItem('forum_last_view');
+    }
+  }, []);
+
   const handlePostCreated = () => {
     loadPosts(1, pageSize);
     // Mock数据不需要重新加载，但保持一致性
@@ -186,9 +222,14 @@ const ForumPage: React.FC = () => {
   };
 
   const handlePostClick = (postId: number, liked: boolean) => {
+    // 存储当前页码和帖子id
+    localStorage.setItem('forum_last_view', JSON.stringify({
+      page: currentPage,
+      postId,
+    }));
     history.push({
       pathname: `/forum/${postId}`,
-      query: { liked: liked ? '1' : '0' }, // 使用query参数传递点赞状态
+      query: { liked: liked ? '1' : '0' },
     });
   };
 
@@ -296,9 +337,11 @@ const ForumPage: React.FC = () => {
           dataSource={posts}
           renderItem={(item) => {
             const formatted = formatDate(item.updateTime);
+            const isHighlighted = item.id === highlightedPostId;
             return (
-              <List.Item>
-                <Card
+              <AnimatedListItem $highlighted={isHighlighted}>
+                <AnimatedCard
+                  $highlighted={isHighlighted}
                   title={item.title}
                   extra={
                     <Space align="center" size="small">
@@ -320,15 +363,14 @@ const ForumPage: React.FC = () => {
                       initialCount={initialLikes[item.id]}
                       initialLiked={initialLiked[item.id]}
                       onChange={(id, liked, count) => {
-                        // 只改这个 post 的 liked/count，别全量重拉
                         setInitialLiked((prev) => ({ ...prev, [id]: liked }));
                         setInitialLikes((prev) => ({ ...prev, [id]: count }));
                       }}
                     />
                     <Typography.Text type="secondary">{item.commentCount} 条评论</Typography.Text>
                   </Space>
-                </Card>
-              </List.Item>
+                </AnimatedCard>
+              </AnimatedListItem>
             );
           }}
         />
