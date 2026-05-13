@@ -1,6 +1,6 @@
 # unswit frontend
 
-https://img.shields.io/badge/like%20the%20unswit-8A2BE2
+![Static Badge](https://img.shields.io/badge/like%20the%20unswit-8A2BE2)
 
 ## 写在前面
 
