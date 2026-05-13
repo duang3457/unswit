@@ -1,5 +1,7 @@
 # unswit frontend
 
+https://img.shields.io/badge/like%20the%20unswit-8A2BE2
+
 ## 写在前面
 
 这里是 unswit 社区前端仓库
